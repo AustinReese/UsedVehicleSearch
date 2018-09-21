@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Plot title="Vehicle Prices vs Miles Driven in Newyork">
+  <Axes>
+    <XAxis min="0" max="252000">Miles Driven</XAxis>
+    <YAxis min="0" max="26900">Vehicle Price in US Dollars</YAxis>
+  </Axes>
+  <Sequence title="Vehicle Price vs Miles Driven in Newyork" color="blue">
+    <DataPoint x="165000" y="3499"/>
+    <DataPoint x="34132" y="259"/>
+    <DataPoint x="159773" y="5500"/>
+    <DataPoint x="175921" y="3800"/>
+    <DataPoint x="42000" y="14999"/>
+    <DataPoint x="201018" y="7495"/>
+    <DataPoint x="81200" y="3500"/>
+    <DataPoint x="162050" y="2195"/>
+    <DataPoint x="128456" y="3295"/>
+    <DataPoint x="117875" y="12000"/>
+    <DataPoint x="67465" y="11990"/>
+    <DataPoint x="116000" y="1900"/>
+    <DataPoint x="14234" y="18900"/>
+    <DataPoint x="252000" y="17500"/>
+    <DataPoint x="178000" y="2700"/>
+    <DataPoint x="112000" y="5400"/>
+    <DataPoint x="49139" y="26900"/>
+    <DataPoint x="167594" y="4500"/>
+    <DataPoint x="31488" y="25995"/>
+    <DataPoint x="155000" y="6000"/>
+    <DataPoint x="188585" y="3845"/>
+    <DataPoint x="52618" y="429"/>
+    <DataPoint x="128939" y="7900"/>
+    <DataPoint x="114365" y="3400"/>
+    <DataPoint x="157000" y="4200"/>
+    <DataPoint x="206000" y="4000"/>
+    <DataPoint x="91132" y="10895"/>
+    <DataPoint x="95000" y="6500"/>
+    <DataPoint x="115000" y="6500"/>
+    <DataPoint x="59000" y="9000"/>
+    <DataPoint x="30000" y="6495"/>
+    <DataPoint x="200" y="2800"/>
+    <DataPoint x="150107" y="5950"/>
+    <DataPoint x="53838" y="314"/>
+    <DataPoint x="23001" y="329"/>
+    <DataPoint x="114000" y="5900"/>
+    <DataPoint x="107000" y="5200"/>
+    <DataPoint x="37000" y="14000"/>
+    <DataPoint x="88000" y="12000"/>
+    <DataPoint x="157410" y="11900"/>
+    <DataPoint x="103000" y="5500"/>
+    <DataPoint x="153" y="2399"/>
+    <DataPoint x="20000" y="8000"/>
+    <DataPoint x="48000" y="11000"/>
+    <DataPoint x="130000" y="1800"/>
+    <DataPoint x="95000" y="3500"/>
+    <DataPoint x="14700" y="1500"/>
+    <DataPoint x="53821" y="329"/>
+    <DataPoint x="125000" y="3500"/>
+    <DataPoint x="68417" y="315"/>
+    <DataPoint x="36768" y="23000"/>
+    <DataPoint x="204000" y="3000"/>
+    <DataPoint x="148000" y="3500"/>
+    <DataPoint x="237" y="2500"/>
+    <DataPoint x="103000" y="6995"/>
+    <DataPoint x="12343" y="10500"/>
+    <DataPoint x="70275" y="2000"/>
+    <DataPoint x="140000" y="2900"/>
+    <DataPoint x="31005" y="10950"/>
+    <DataPoint x="244000" y="2800"/>
+    <DataPoint x="110000" y="2999"/>
+    <DataPoint x="111000" y="1500"/>
+    <DataPoint x="61547" y="549"/>
+    <DataPoint x="51000" y="18000"/>
+    <DataPoint x="139971" y="7500"/>
+    <DataPoint x="132880" y="6800"/>
+    <DataPoint x="67855" y="4999"/>
+    <DataPoint x="125000" y="1850"/>
+    <DataPoint x="139971" y="7500"/>
+  </Sequence>
+</Plot>

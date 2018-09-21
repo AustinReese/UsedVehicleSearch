@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Plot title="Vehicle Prices vs Miles Driven in Elpaso">
+  <Axes>
+    <XAxis min="0" max="291081">Miles Driven</XAxis>
+    <YAxis min="0" max="29000">Vehicle Price in US Dollars</YAxis>
+  </Axes>
+  <Sequence title="Vehicle Price vs Miles Driven in Elpaso" color="blue">
+    <DataPoint x="190000" y="3500"/>
+    <DataPoint x="156000" y="3850"/>
+    <DataPoint x="87000" y="4590"/>
+    <DataPoint x="137700" y="1"/>
+    <DataPoint x="54412" y="13500"/>
+    <DataPoint x="41000" y="13500"/>
+    <DataPoint x="144000" y="4900"/>
+    <DataPoint x="45197" y="7000"/>
+    <DataPoint x="46000" y="5800"/>
+    <DataPoint x="47000" y="5795"/>
+    <DataPoint x="99000" y="13500"/>
+    <DataPoint x="51227" y="6500"/>
+    <DataPoint x="15629" y="6300"/>
+    <DataPoint x="47469" y="5500"/>
+    <DataPoint x="85028" y="5900"/>
+    <DataPoint x="75988" y="29000"/>
+    <DataPoint x="122925" y="5550"/>
+    <DataPoint x="291081" y="6000"/>
+    <DataPoint x="109000" y="17999"/>
+    <DataPoint x="52878" y="1500"/>
+    <DataPoint x="215000" y="4800"/>
+    <DataPoint x="52878" y="1500"/>
+    <DataPoint x="215000" y="4800"/>
+    <DataPoint x="201000" y="7500"/>
+    <DataPoint x="34000" y="6950"/>
+    <DataPoint x="69000" y="5500"/>
+    <DataPoint x="84000" y="4900"/>
+    <DataPoint x="60000" y="3450"/>
+    <DataPoint x="90000" y="11500"/>
+    <DataPoint x="99274" y="20000"/>
+    <DataPoint x="162000" y="3300"/>
+    <DataPoint x="158431" y="3500"/>
+    <DataPoint x="158000" y="3500"/>
+    <DataPoint x="58112" y="14950"/>
+    <DataPoint x="133000" y="1999"/>
+    <DataPoint x="99000" y="4900"/>
+    <DataPoint x="131000" y="2500"/>
+    <DataPoint x="200000" y="14500"/>
+    <DataPoint x="65786" y="12998"/>
+    <DataPoint x="130000" y="4995"/>
+    <DataPoint x="87500" y="17000"/>
+    <DataPoint x="100000" y="3950"/>
+    <DataPoint x="90000" y="5350"/>
+    <DataPoint x="83000" y="4550"/>
+    <DataPoint x="75716" y="7550"/>
+    <DataPoint x="55000" y="27950"/>
+    <DataPoint x="99000" y="4900"/>
+    <DataPoint x="200000" y="3000"/>
+    <DataPoint x="155" y="2800"/>
+    <DataPoint x="238000" y="3000"/>
+    <DataPoint x="197000" y="4200"/>
+  </Sequence>
+</Plot>
