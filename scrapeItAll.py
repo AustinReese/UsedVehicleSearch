@@ -10,21 +10,26 @@ def runScraper():
     citiesList = []
     for city in res:
         citiesList.append(city[0])
-    curs.execute('''DROP TABLE IF EXISTS vehicles''')
-    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(city STRING, price INTEGER, make STRING, condition STRING, cylinders STRING, fuel STRING,
+    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(url STRING PRIMARY KEY, city STRING, price INTEGER, make STRING, condition STRING, cylinders STRING, fuel STRING,
     odometer INTEGER, title_status STRING, transmission STRING, VIN STRING, drive STRING, size STRING, type STRING, paint_color STRING)''')       
     session = requests.Session()  
     scraped = 0
+    cities = 0
     for city in citiesList:
-        print("Scraping vehicles from {}".format(city))  
+        scrapedInCity = 0
+        cities += 1
+        print("Scraping vehicles from {}, {} cities remain".format(city, len(citiesList) - cities))
         empty = False
+        townUrls = []        
         while not empty:
-            print("Gathering entries {} through {}".format(scraped, scraped + 120))
-            page = session.get("https://{}.craigslist.org/d/cars-trucks/search/cta?s={}".format(city, scraped))
+            print("Gathering entries {} through {}".format(scrapedInCity, scrapedInCity + 120))
+            page = session.get("https://{}.craigslist.org/d/cars-trucks/search/cta?s={}".format(city, scrapedInCity))
+            scrapedInCity += 120
             tree = html.fromstring(page.content)
             vehicles = tree.xpath('//a[@class="result-image gallery"]')
             if len(vehicles) == 0:
                 empty = True
+                print("All done in {}, moving along...".format(city))
                 continue
             vehiclesList = []
             thrown = 0
@@ -39,13 +44,18 @@ def runScraper():
                 vehiclesList.append(vehicleDetails)
             print("{} entries tossed".format(thrown))
             for item in vehiclesList:
+                url = item[0]
+                townUrls.append(url)
                 vehicleDict = {}
                 vehicleDict["price"] = int(item[1].strip("$"))
+                curs.execute("SELECT 1 FROM vehicles WHERE url ='{}'".format(url))
+                if curs.fetchall():
+                    continue
                 try:
-                    page = session.get(item[0])
+                    page = session.get(url)
                     tree = html.fromstring(page.content)
                 except:
-                    print("Failed to reach {}, entry has been dropped".format(item[0]))
+                    print("Failed to reach {}, entry has been dropped".format(url))
                     continue
                 attrs = tree.xpath('//span//b')
                 for item in attrs:
@@ -54,9 +64,10 @@ def runScraper():
                         k = k.strip(":")
                     except:
                         k = "make"
-                    if item == None:
+                    try:
+                        vehicleDict[k] = item.text.strip()
+                    except:
                         continue
-                    vehicleDict[k] = item.text.strip()
                 for item in vehicleDict:
                     price = None
                     make = None
@@ -91,8 +102,8 @@ def runScraper():
                         fuel = vehicleDict["fuel"]
                     if "odometer" in vehicleDict:
                         odometer = vehicleDict["odometer"]
-                    if "title_status" in vehicleDict:
-                        title_status = vehicleDict["title_status"]    
+                    if "title status" in vehicleDict:
+                        title_status = vehicleDict["title status"]    
                     if "transmission" in vehicleDict:
                         transmission = vehicleDict["transmission"]
                     if "VIN" in vehicleDict:
@@ -101,17 +112,27 @@ def runScraper():
                         drive = vehicleDict["drive"]
                     if "size" in vehicleDict:
                         size = vehicleDict["size"]
-                    if "vehicle_type" in vehicleDict:
-                        vehicle_type = vehicleDict["vehicle_type"]
-                    if "paint_color" in vehicleDict:
-                        paint_color = vehicleDict["paint_color"]   
-                curs.execute('''INSERT INTO vehicles(city, price, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, paint_color)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (city, price, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, vehicle_type, paint_color))
+                    if "type" in vehicleDict:
+                        vehicle_type = vehicleDict["type"]
+                    if "paint color" in vehicleDict:
+                        paint_color = vehicleDict["paint color"]   
+                curs.execute('''INSERT INTO vehicles(url, city, price, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, paint_color)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city, price, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, vehicle_type, paint_color))
                 scraped += 1
+                if len(vehicleDict) > 13:
+                    print("-------------------------ALERT-------------------------------")
+                    print(len(vehicleDict))
+                    print(vehicleDict)
             print("{} vehicles scraped".format(scraped))
             db.commit()
-            break
-        break
+        curs.execute("SELECT url FROM vehicles WHERE city = '{}'".format(city))
+        deleted = 0
+        for cityUrl in curs:
+            if cityUrl[0] not in townUrls:
+                curs.execute("DELETE FROM vehicles WHERE url = '{}'".format(cityUrl[0]))
+                deleted += 1
+        print("Deleted {} old records".format(deleted))
+    print("vehicles.db successfully updated, {} entries exist".format(curs.rowcount))
     db.close()      
     
 def main():
