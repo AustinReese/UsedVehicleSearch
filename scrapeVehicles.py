@@ -1,8 +1,8 @@
 from lxml import html
 from datetime import datetime
+from random import shuffle
 import requests
 import sqlite3
-from random import shuffle
 
 def runScraper():
     db = sqlite3.connect("cities.db")
@@ -25,7 +25,12 @@ def runScraper():
         townUrls = []        
         while not empty:
             print("Gathering entries {} through {}".format(scrapedInCity, scrapedInCity + 120))
-            page = session.get("https://{}.craigslist.org/d/cars-trucks/search/cta?s={}".format(city, scrapedInCity))
+            try:
+                searchUrl = "https://{}.craigslist.org/d/cars-trucks/search/cta?s={}".format(city, scrapedInCity)
+                page = session.get(searchUrl)
+            except:
+                print("Failed to reach {}, entry has been dropped".format(searchUrl))
+                continue                
             scrapedInCity += 120
             tree = html.fromstring(page.content)
             vehicles = tree.xpath('//a[@class="result-image gallery"]')
@@ -129,7 +134,7 @@ def runScraper():
             db.commit()
         curs.execute("SELECT url FROM vehicles WHERE city = '{}'".format(city))
         deleted = 0
-        for cityUrl in curs:
+        for cityUrl in curs.fetchall():
             if cityUrl[0] not in townUrls:
                 curs.execute("DELETE FROM vehicles WHERE url = '{}'".format(cityUrl[0]))
                 deleted += 1
