@@ -1,2 +1,4 @@
 *.xml
 *.db
+*.pyc
+*.pyo

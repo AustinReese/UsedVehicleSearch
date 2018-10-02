@@ -1,4 +1,13 @@
 <!DOCTYPE html> {% extends "base.html" %}
 {% block content %}
-<h1>You searched for {{data}}</h1>
+<div class="text-center">
+	<h3>Search Results</h3>
+	<ul class="list-group">
+	{% for entry in range(data|length) %}
+		<div class="col-md-4 panel text-center">
+			<li class="list-group-item text-center">{{data[entry][0]}}</li>
+		</div>
+	{% endfor %}
+	</ul>
+</div>
 {% endblock %}
