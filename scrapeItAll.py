@@ -2,6 +2,7 @@ from lxml import html
 from datetime import datetime
 import requests
 import sqlite3
+from random import shuffle
 
 def runScraper():
     db = sqlite3.connect("cities.db")
@@ -15,6 +16,7 @@ def runScraper():
     session = requests.Session()  
     scraped = 0
     cities = 0
+    shuffle(citiesList)
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
