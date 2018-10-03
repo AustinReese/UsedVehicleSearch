@@ -1,7 +1,8 @@
 import sqlite3
 
-def query(data):
+def queryForm(data):
     city = data.city.data
+    manu = data.manufacturer.data
     make = data.make.data
     cond = data.condition.data
     cyl = data.cylinders.data
@@ -13,12 +14,13 @@ def query(data):
     vType = data.vehicleType.data
     color = data.paintColor.data
     price = data.price.data
+    year = data.year.data
     odom = data.odometer.data
         
-    criteriaDict = {city: "city", make: "make", cond: "condiiton", 
+    criteriaDict = {city: "city", manu: "manufacturer", make: "make", cond: "condiiton", 
                     cyl: "cylinders", tran: "transmission", vin: "vin",
                     drive: "drive", size: "size", vType: "vehicleType", 
-                    color: "paintColor", price: "price", odom: "odometer"}
+                    color: "paintColor", price: "price", year: "year", odom: "odometer"}
     
     whereClause = ""
     for k, v in criteriaDict.items():

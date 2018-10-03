@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import Form, BooleanField, StringField, IntegerField, validators
 from wtforms.validators import Length, ValidationError, DataRequired
-from query import query
+from queryForm import queryForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "CraigsistFilter"
@@ -12,6 +12,7 @@ bootstrap = Bootstrap(app)
 
 class FilterForm(FlaskForm):
     city = StringField("City", validators = [Length(max=40)])
+    manufacturer = StringField("Make", validators = [Length(max=40)])    
     make = StringField("Make", validators = [Length(max=40)])
     condition = StringField("Condition", validators = [Length(max=40)])
     cylinders = StringField("Cylinders", validators = [Length(max=40)])
@@ -24,6 +25,7 @@ class FilterForm(FlaskForm):
     vehicleType = StringField("Type", validators = [Length(max=40)])
     paintColor = StringField("Paint Color", validators = [Length(max=40)])
     price = IntegerField("Price", validators = [validators.optional()])
+    year = IntegerField("Make", validators = [validators.optional()])    
     odometer = IntegerField("Odometer", validators = [validators.optional()])
 
 @app.route('/', methods=['GET', 'POST'])
