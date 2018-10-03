@@ -3,7 +3,6 @@ import sqlite3
 def queryDropdowns():
     db = sqlite3.connect("cities.db")
     curs = db.cursor()
-    curs.execute("DROP TABLE vehicles")
     curs.execute("SELECT DISTINCT cylinders FROM vehicles")
     cylinders = curs.fetchall()
     curs.execute("SELECT DISTINCT fuel FROM vehicles")
