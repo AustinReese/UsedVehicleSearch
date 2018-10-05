@@ -1,3 +1,5 @@
+#this is a work in progress that will grab unique column values to allow for dropdown menus instead of text boxes in the search form
+
 import sqlite3
 
 def queryDropdowns():

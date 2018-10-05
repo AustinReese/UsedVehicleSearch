@@ -1,3 +1,5 @@
+#this is where the magic happens, we currently have only one route but that will change
+
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
@@ -11,6 +13,7 @@ bootstrap = Bootstrap(app)
 
 
 class FilterForm(FlaskForm):
+    #set up the form...
     city = StringField("City", validators = [Length(max=40)])
     manufacturer = StringField("Make", validators = [Length(max=40)])    
     make = StringField("Make", validators = [Length(max=40)])
@@ -30,9 +33,11 @@ class FilterForm(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    #render index.html with form passed through as a variable
     form = FilterForm()
+    #validate_on_submit() runs when the form is submitted. we then redirect to search.html with the data fetched from queryForm.py
     if form.validate_on_submit():
-        data = query(form)
+        data = queryForm(form)
         return render_template("search.html", data = data)
     return render_template("index.html", form = form)
 
