@@ -59,8 +59,8 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 ## Known Bugs
 
-* Searching by a price/odometer of 0 is picked up as None by python and the filter is ignored
+* Searching by a price/odometer of 0 is picked up as None by python and the filter is ignored.
 
 ## Contributors
 
-This application is being developed by Austin Reese, Chris Horton, Austin Uetz, and Jorge Contreras
+This application is being developed by Austin Reese and Chris Horton.
