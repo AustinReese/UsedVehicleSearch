@@ -230,7 +230,6 @@ def runScraper():
             #these lines will execute every time we grab a new page (after 120 entries)
             print("{} vehicles scraped".format(scraped))
             db.commit()
-            break
         
         #now to clean the database we grab all urls from the city that are already logged
         curs.execute("SELECT url FROM vehicles WHERE city = '{}'".format(city))
