@@ -3,6 +3,7 @@
 import sqlite3
 
 def queryDropdowns():
+    dropdowns = {}
     db = sqlite3.connect("cities.db")
     curs = db.cursor()
     curs.execute("SELECT DISTINCT cylinders FROM vehicles")
@@ -23,5 +24,98 @@ def queryDropdowns():
     manufacturer = curs.fetchall()
     curs.execute("SELECT DISTINCT condition FROM vehicles")
     condition = curs.fetchall()
+    curs.execute("SELECT DISTINCT size FROM vehicles")
+    size = curs.fetchall()
+    curs.execute("SELECT DISTINCT transmission FROM vehicles")
+    transmission = curs.fetchall()
+    transmissions = []    
+    for item in transmission:
+        item = item[0]
+        if item != None:
+            transmissions.append((item, item))
+    transmissions.append(("", ""))            
+    transmissions.sort()
+    dropdowns["transmission"] = transmissions        
+    sizes = []    
+    for item in size:
+        item = item[0]
+        if item != None:
+            sizes.append((item, item))
+    sizes.append(("", ""))
+    sizes.sort()
+    dropdowns["size"] = sizes    
+    cyls = []    
+    for item in cylinders:
+        item = item[0]
+        if item != None:
+            cyls.append((item, item))
+    cyls.append(("", ""))                
+    cyls.sort()
+    dropdowns["cylinders"] = cyls
+    fuels = []    
+    for item in fuel:
+        item = item[0]
+        if item != None:
+            fuels.append((item, item))
+    fuels.append(("", ""))                
+    fuels.sort()
+    dropdowns["fuel"] = fuels
+    titleStatusList = []    
+    for item in titleStatus:
+        item = item[0]
+        if item != None:
+            titleStatusList.append((item, item))
+    titleStatusList.append(("", ""))                
+    titleStatusList.sort()
+    dropdowns["titleStatus"] = titleStatusList
+    drives = []    
+    for item in drive:
+        item = item[0]
+        if item != None:
+            drives.append((item, item))
+    drives.append(("", ""))                    
+    drives.sort()
+    dropdowns["drive"] = drives
+    vehicleTypes = []    
+    for item in vehicleType:
+        item = item[0]
+        if item != None:
+            vehicleTypes.append((item, item))
+    vehicleTypes.append(("", ""))                        
+    vehicleTypes.sort()
+    dropdowns["vehicleType"] = vehicleTypes
+    paintColors = []    
+    for item in paintColor:
+        item = item[0]
+        if item != None:
+            paintColors.append((item, item))
+    paintColors.append(("", ""))                        
+    paintColors.sort()
+    dropdowns["paintColor"] = paintColors
+    manufacturers = []    
+    for item in manufacturer:
+        item = item[0]
+        if item != None:
+            manufacturers.append((item, item))
+    manufacturers.append(("", ""))
+    manufacturers.sort()
+    dropdowns["manufacturer"] = manufacturers
+    years = []    
+    for item in year:
+        item = item[0]
+        if item != None:
+            years.append((item, item))
+    years.sort()            
+    years = [("", "")] + years
+    dropdowns["year"] = years
+    conditions = []    
+    for item in condition:
+        item = item[0]
+        if item != None:
+            conditions.append((item, item))
+    conditions.append(("", ""))                        
+    conditions.sort()
+    dropdowns["condition"] = conditions
+    
+    return dropdowns
 
-queryDropdowns()

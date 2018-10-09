@@ -4,6 +4,7 @@
 	<h2 class="form-login-heading text-center">Search Craigslist</h2>
 	    {{ form.csrf_token }}
   		{{ wtf.form_field(form.city) }}
+  		{{ wtf.form_field(form.manufacturer) }}
   		{{ wtf.form_field(form.make) }} 
   		{{ wtf.form_field(form.condition) }}
   		{{ wtf.form_field(form.cylinders) }} 
@@ -15,7 +16,8 @@
   		{{ wtf.form_field(form.size) }} 
   		{{ wtf.form_field(form.vehicleType) }} 
   		{{ wtf.form_field(form.paintColor) }}
-  		{{ wtf.form_field(form.price) }} 
+  		{{ wtf.form_field(form.price) }}
+  		{{ wtf.form_field(form.year) }} 
   		{{ wtf.form_field(form.odometer) }}
 	<input type=submit val=go>
 </form>

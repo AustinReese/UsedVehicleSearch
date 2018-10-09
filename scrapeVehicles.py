@@ -17,9 +17,10 @@ def runScraper():
     citiesList = []
     for city in res:
         citiesList.append(city[0])
+    
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(url STRING PRIMARY KEY, city STRING, price INTEGER, year INTEGER, manufacturer STRING,
     make STRING, condition STRING, cylinders STRING, fuel STRING, odometer INTEGER, title_status STRING, transmission STRING, VIN STRING,
-    drive STRING, size STRING, type STRING, paint_color STRING)''')
+    drive STRING, size STRING, type STRING, paint_color STRING, image_url STRING, lat FLOAT, long FLOAT)''')
     session = HTMLSession()
     
     #scraped counts all entries gathered, cities counts cities looped through
@@ -37,6 +38,10 @@ def runScraper():
                  "rover", "buick", "cadillac", "infiniti", "infinity", "audi", "mazda", "chrysler",
                  "acura", "lexus", "nissan", "datsun", "jaguar", "alfa", "alfa-romeo", "aston", "aston-martin",
                  "ferrari", "fiat", "hennessey", "porche", "noble", "morgan", "mini"]
+    
+    #if the car year is beyond next year, we toss it out. this variable is used later
+    nextYear = datetime.now().year + 1
+    
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
@@ -125,6 +130,7 @@ def runScraper():
                         continue
                     
                 #we will assume that each of these variables are None until we hear otherwise
+                #that way, try/except clauses can simply pass and leave these values as None
                 price = None
                 year = None
                 manufacturer = None
@@ -140,6 +146,9 @@ def runScraper():
                 size = None
                 vehicle_type = None
                 paint_color = None
+                image_url = None
+                lat = None
+                long = None
                 
                 #now this code gets redundant. if we picked up a specific attr in the vehicleDict then we can change the variable from None.
                 #integer attributes (price/odometer) are handled in case the int() is unsuccessful, but i have never seen that be the case
@@ -159,6 +168,8 @@ def runScraper():
                     #make actually contains 3 variables that we'd like: year, manufacturer, and model (which we call make)
                     try:
                         year = int(vehicleDict["make"][:4])
+                        if year > nextYear:
+                            year = None
                     except:
                         year = None
                     make = vehicleDict["make"][5:]
@@ -195,13 +206,31 @@ def runScraper():
                 if "paint color" in vehicleDict:
                     paint_color = vehicleDict["paint color"]
                     
+                #now lets fetch the image url, latitude, and longitude if they exist
+                
+                try:
+                    img = tree.xpath('//div[@class="slide first visible"]//img')
+                    image_url = img[0].attrib["src"]
+                except:
+                    pass
+                
+                try:
+                    location = tree.xpath("//div[@id='map']")
+                    lat = float(location[0].attrib["data-latitude"])
+                    long = float(location[0].attrib["data-longitude"])
+                except:
+                    pass
+                
                 #finally we get to insert the entry into the database
-                curs.execute('''INSERT INTO vehicles(url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, paint_color)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, vehicle_type, paint_color))
+                curs.execute('''INSERT INTO vehicles(url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, 
+                paint_color, image_url, lat, long)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, 
+                                                                     size, vehicle_type, paint_color, image_url, lat, long))
                 scraped += 1
             #these lines will execute every time we grab a new page (after 120 entries)
             print("{} vehicles scraped".format(scraped))
             db.commit()
+            break
         
         #now to clean the database we grab all urls from the city that are already logged
         curs.execute("SELECT url FROM vehicles WHERE city = '{}'".format(city))

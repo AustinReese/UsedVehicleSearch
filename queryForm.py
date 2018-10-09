@@ -25,8 +25,8 @@ def queryForm(data):
     #construct dict of strings for the query
     criteriaDict = {city: "city", manu: "manufacturer", make: "make", cond: "condition", 
                     cyl: "cylinders", tran: "transmission", vin: "vin", fuel: "fuel",
-                    drive: "drive", size: "size", vType: "vehicleType", 
-                    color: "paintColor", price: "price", year: "year", odom: "odometer"}
+                    drive: "drive", size: "size", vType: "type", title: "title_status",
+                    color: "paint_color", price: "price", year: "year", odom: "odometer"}
     
     whereClause = ""
     for k, v in criteriaDict.items():
@@ -38,10 +38,11 @@ def queryForm(data):
     whereClause = whereClause[:-5]
         
     #finally our query
-    query = "SELECT * FROM vehicles WHERE {} LIMIT 100;".format(whereClause)
-    
-    print(query)
-        
+    if not whereClause:
+        query = "SELECT * FROM vehicles LIMIT 100;"
+    else:
+        query = "SELECT * FROM vehicles WHERE {} LIMIT 100;".format(whereClause)
+            
     db = sqlite3.connect("cities.db")
     curs = db.cursor()
     curs.execute(query)
