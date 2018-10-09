@@ -7,7 +7,7 @@ Craigslist Filter (working title) is a web application built with python and fla
 
 This application requires Python 3.6 or greater and several installable modules.
 
-You will need to install flask, sqlite3, wtforms, lxml, and requests.
+You will need to install flask, sqlite3, wtforms, lxml, and requests_html.
 
 ```
 pip3 install Flask
@@ -22,7 +22,7 @@ pip3 install wtforms
 pip3 install lxml
 ```
 ```
-pip3 install requests
+pip3 install requests_html
 ```
 
 ## Deploying
@@ -35,7 +35,7 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 * The filter is operational but minor improvements are still in the works
 
-* Pivoting to a new fancier requests module as Python's generic requests module is very slow and therefore scrapeVehicles can take many hours fully gather all the data on Craigslist (usually around a million entries).
+* Pivoting to a fancier requests module as requests_html is quite slow and therefore scrapeVehicles.py can take many hours fully gather all the data on Craigslist (usually around a million entries).
 
 * Login/Logout functionality which allows users to save certain filter combinations and search results.
 
