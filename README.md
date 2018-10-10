@@ -33,15 +33,19 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 ## Specific Future Implementations
 
-* The filter is operational but minor improvements are still in the works
+* Add some message that alerts a user when their search yields no results and remains on the form page instead of simply showing a blank results page.
 
-* Pivoting to a fancier requests module as requests_html is quite slow and therefore scrapeVehicles.py can take many hours fully gather all the data on Craigslist (usually around a million entries).
+* Allow for filtering between two values for fields such as price and odometer
+
+* Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially
+
+* Track which cities have been scraped recently to add order to the scraping process
+
+* Allow for users to search by any city instead of specific craigslist regions
 
 * Login/Logout functionality which allows users to save certain filter combinations and search results.
 
-* Add some message that alerts a user when their search yields no results and remains on the form page instead of simply showing a blank results page.
-
-* Track which cities have been scraped recently to add order to the scraping process
+* Add Google maps API feature to allow users to browse sales in specific areas
 
 ## Broad Future Implementations
 
@@ -52,8 +56,6 @@ Once these applications have completed, simply run app.py and copy and paste the
 * Frequent automated database updates.
 
 * User-specific sale tracking (price has changed, listing has been removed, etc.).
-
-* Book a domain put the application online (this could be tricky as Craigslist probably wouldn't be pleased).
 
 ## Completed Tasks
 
