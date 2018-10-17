@@ -41,7 +41,7 @@ def queryForm(data):
     if not whereClause:
         query = "SELECT * FROM vehicles LIMIT 100;"
     else:
-        query = "SELECT * FROM vehicles WHERE {} LIMIT 100;".format(whereClause)
+        query = "SELECT * FROM vehicles WHERE {} LIMIT 102;".format(whereClause)
             
     db = sqlite3.connect("cities.db")
     curs = db.cursor()

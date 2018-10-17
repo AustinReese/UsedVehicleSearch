@@ -20,7 +20,7 @@ class FilterForm(FlaskForm):
     city = StringField("City", validators = [Length(max=40)])
     manufacturer = SelectField("Manufacturer", choices = dropdowns["manufacturer"], validators = [validators.optional()])    
     make = StringField("Make", validators = [Length(max=40)])
-    condition = StringField("Condition", validators = [Length(max=40)])
+    condition = SelectField("Condition", choices = dropdowns["condition"], validators = [Length(max=40)])    
     cylinders = SelectField("Cylinders", choices = dropdowns["cylinders"], validators = [validators.optional()])
     fuel = SelectField("Fuel", choices = dropdowns["fuel"], validators = [validators.optional()])
     transmission = SelectField("Transmission", choices = dropdowns["transmission"], validators = [validators.optional()])
