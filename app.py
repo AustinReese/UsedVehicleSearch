@@ -7,6 +7,7 @@ from wtforms import Form, BooleanField, StringField, IntegerField, SelectField, 
 from wtforms.validators import Length, ValidationError, DataRequired
 from queryForm import queryForm
 from queryDropdowns import queryDropdowns
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "CraigsistFilter"
@@ -16,6 +17,8 @@ bootstrap = Bootstrap(app)
 class FilterForm(FlaskForm):
     #set up the form and grabbing dropdowns, a dictionary of unique values to populate select fields
     dropdowns = queryDropdowns()
+    
+    year = datetime.now().year
     
     city = StringField("City", validators = [Length(max=40)])
     manufacturer = SelectField("Manufacturer", choices = dropdowns["manufacturer"], validators = [validators.optional()])    
@@ -31,7 +34,8 @@ class FilterForm(FlaskForm):
     vehicleType = SelectField("Vehicle Type", choices = dropdowns["vehicleType"], validators = [validators.optional()])
     paintColor = SelectField("Paint Color", choices = dropdowns["paintColor"], validators = [validators.optional()])
     price = IntegerField("Price", validators = [validators.optional()])
-    year = IntegerField("Year", validators = [validators.optional()])
+    yearStart = IntegerField("Minimum Year", validators=[validators.optional(), validators.NumberRange(min=1880, max=year + 1, message="Please enter a year between 1880 and {}".format(year + 1))])
+    yearEnd = IntegerField("Maximum Year", validators=[validators.optional(), validators.NumberRange(min=1880, max=year + 1, message="Please enter a year between 1880 and {}".format(year + 1))])
     odometer = IntegerField("Odometer", validators = [validators.optional()])
 
 @app.route('/', methods=['GET', 'POST'])

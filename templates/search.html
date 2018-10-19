@@ -1,17 +1,22 @@
 <!DOCTYPE html> {% extends "base.html" %}
 {% block content %}
 <div class="text-center">
-	<h3>Search Results</h3>
-	<ul class="list-group">
-	{% for entry in range(data|length) %}
-		<div class="col-md-4 panel text-center">
-			{% if data[entry][4] != None %}
-			<li class="list-group-item text-center"><a target=_blank, href={{data[entry][0]}}>{{data[entry][3]}} {{data[entry][4]}}</a></li>
-			{% else %}
-			<li class="list-group-item text-center"><a target=_blank, href={{data[entry][0]}}>{{data[entry][3]}} {{data[entry][5]}}</a></li>
-			{% endif %}
-		</div>
-	{% endfor %}
-	</ul>
+	{% if data|length == 0 %}
+	<div class="col-md-12 text-center">
+		<h2>No results found</h2>
+	{% else %}
+		<h3>Search Results</h3>
+		<ul class="list-group">
+		{% for entry in range(data|length) %}
+			<div class="col-md-4 panel text-center">
+				{% if data[entry][4] != None %}
+				<li class="list-group-item text-center"><a target=_blank, href={{data[entry][0]}}>{{data[entry][3]}} {{data[entry][4]}} - ${{data[entry][2]}} - Located in {{data[entry][1]}}</a></li>
+				{% else %}
+				<li class="list-group-item text-center"><a target=_blank, href={{data[entry][0]}}>{{data[entry][3]}} {{data[entry][5]}} - ${{data[entry][2]}} - Located in {{data[entry][2]}}</a></li>
+				{% endif %}
+			</div>
+		{% endfor %}
+		</ul>
+	{% endif %}
 </div>
 {% endblock %}
