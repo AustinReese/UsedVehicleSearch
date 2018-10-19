@@ -33,10 +33,13 @@ class FilterForm(FlaskForm):
     size = SelectField("Size", choices = dropdowns["size"], validators = [validators.optional()])
     vehicleType = SelectField("Vehicle Type", choices = dropdowns["vehicleType"], validators = [validators.optional()])
     paintColor = SelectField("Paint Color", choices = dropdowns["paintColor"], validators = [validators.optional()])
-    price = IntegerField("Price", validators = [validators.optional()])
+    priceStart = IntegerField("Minimum Price", validators=[validators.optional(), validators.NumberRange(min=0, max=10000000, message="Please enter a value between 0 and 10,000,000")])
+    priceEnd = IntegerField("Maximum Price", validators=[validators.optional(), validators.NumberRange(min=0, max=10000000, message="Please enter a value between 0 and 10,000,000")])    
     yearStart = IntegerField("Minimum Year", validators=[validators.optional(), validators.NumberRange(min=1880, max=year + 1, message="Please enter a year between 1880 and {}".format(year + 1))])
     yearEnd = IntegerField("Maximum Year", validators=[validators.optional(), validators.NumberRange(min=1880, max=year + 1, message="Please enter a year between 1880 and {}".format(year + 1))])
-    odometer = IntegerField("Odometer", validators = [validators.optional()])
+    odometerStart = IntegerField("Minimum Odometer", validators=[validators.optional(), validators.NumberRange(min=0, max=10000000, message="Please enter a value between 0 and 10,000,000")])
+    odometerEnd = IntegerField("Maximum Odometer", validators=[validators.optional(), validators.NumberRange(min=0, max=100000000, message="Please enter a value between 0 and 10,000,000")])
+    
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

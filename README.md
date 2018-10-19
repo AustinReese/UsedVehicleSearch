@@ -34,8 +34,6 @@ Once these applications have completed, simply run app.py and copy and paste the
 ## Specific Future Implementations
 *  Remain on the form page when a search yields no results
 
-* Allow for filtering between two values for fields such as price and odometer (in progress)
-
 * Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially
 
 * Track which cities have been scraped recently to add order to the scraping process
@@ -65,6 +63,11 @@ Once these applications have completed, simply run app.py and copy and paste the
 * Scraped the map on the listing page to extract more specific location (lat/long) instead of just the region.
 
 * Added a message that alerts a user when their search yields no results.
+
+* Allowed for filtering between two values for fields such as price and odometer.
+
+* Added photos to results page.
+
 ## Known Bugs
 
 * Searching by a price/odometer of 0 is picked up as None by python and the filter is ignored.
