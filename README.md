@@ -27,7 +27,7 @@ pip3 install requests_html
 
 ## Deploying
 
-To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py in order to generate the databases used by the application.
+To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py (or download a cached [here](https://files.fm/u/yw247cuc)) version in order to generate the databases used by the application.
 
 Once these applications have completed, simply run app.py and copy and paste the address provided in the terminal into your browser.
 
@@ -38,7 +38,7 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 * Track which cities have been scraped recently to add order to the scraping process
 
-* Allow for users to search by any city using latitude and longitude instead of specific craigslist regions
+* Allow users to specify a search radius and return more specific results when searching by location
 
 * Login/Logout functionality which allows users to save certain filter combinations and search results.
 
@@ -68,10 +68,14 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 * Added photos to results page.
 
+* Allow for users to search by any city using latitude and longitude instead of specific craigslist regions.
+
 ## Known Bugs
 
-* Searching by a price/odometer of 0 is picked up as None by python and the filter is ignored.
+* Manufacturer drop down reveals too many subjects
 
 ## Contributors
 
-This application is being developed by Austin Reese and Chris Horton.
+This application is being developed by Austin Reese.
+
+

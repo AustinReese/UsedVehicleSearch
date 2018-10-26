@@ -2,11 +2,16 @@
 
 import sqlite3
 from datetime import datetime
+from geopy.geocoders import Nominatim
+
 
 def queryForm(data):
+    #this will be used to get the lat/long of cities, allowing for cars nearby searches
+    geo = Nominatim(user_agent="Hello")    
     
     #grab data from user
     city = data.city.data
+    state = data.state.data
     manu = data.manufacturer.data
     make = data.make.data
     cond = data.condition.data
@@ -36,12 +41,17 @@ def queryForm(data):
     for k, v in criteriaDict.items():
         #if not k then the field was left blank and we do not include it in the query, otherwise we search by it
         if k != None and k != "":
+            #these if statements allow for searching by minimum/maximum values
             if v == "year":
+                # for example we must handle blank min/max's so if they are blank they are set to the default min/max
                 if yearStart == None:
                     yearStart = 1880
+                #again with maximum
                 if yearEnd == None:
                     yearEnd = datetime.now().year + 1
+                #query between the two values
                 whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, yearStart, yearEnd)
+            #repeat
             elif v == "odometer":
                 if odomStart == None:
                     odomStart = 0
@@ -56,6 +66,24 @@ def queryForm(data):
                 whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, priceStart, priceEnd)
             elif v == "make":
                 whereClause = whereClause + "{} CONTAINS {} AND ".format(v, k)
+            elif v == "city":
+                # all results near a city
+                lat, long = 0, 0
+                if not state:
+                    loc = geo.geocode(city)
+                    if loc:
+                        lat, long = loc.latitude, loc.longitude
+                else:
+                    loc = geo.geocode("{}, {}".format(city, state))
+                    print("looking for both")
+                    if loc:
+                        lat, long = loc.latitude, loc.longitude
+                print(loc)
+                whereClause = whereClause + "lat BETWEEN '{}' AND '{}' AND long BETWEEN '{}' AND '{}' AND "\
+                    .format(lat - .5, lat + .5, long - .5, long + .5)
+            elif v == "state" and not criteriaDict["city"]:
+                # all results within a state
+                pass
             else:
                 whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
     
@@ -73,7 +101,6 @@ def queryForm(data):
     curs.execute(query)
     res = curs.fetchall()
     db.close()
-    print(query)
         
     #return our results
     return res

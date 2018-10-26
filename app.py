@@ -21,9 +21,10 @@ class FilterForm(FlaskForm):
     year = datetime.now().year
     
     city = StringField("City", validators = [Length(max=40)])
+    state = SelectField("State", choices = dropdowns["states"], validators = [validators.optional()])
     manufacturer = SelectField("Manufacturer", choices = dropdowns["manufacturer"], validators = [validators.optional()])    
     make = StringField("Make", validators = [Length(max=40)])
-    condition = SelectField("Condition", choices = dropdowns["condition"], validators = [Length(max=40)])    
+    condition = SelectField("Condition", choices = dropdowns["condition"], validators = [validators.optional()])    
     cylinders = SelectField("Cylinders", choices = dropdowns["cylinders"], validators = [validators.optional()])
     fuel = SelectField("Fuel", choices = dropdowns["fuel"], validators = [validators.optional()])
     transmission = SelectField("Transmission", choices = dropdowns["transmission"], validators = [validators.optional()])
