@@ -180,7 +180,24 @@ def runScraper():
                         if word.lower() in carBrands:
                             foundManufacturer = True
                             make = ""
+                            #resolve conflicting manufacturer titles
                             manufacturer = word.lower()
+                            if manufacturer == "chev" or manufacturer == "chevy":
+                                manufacturer = "chevrolet"
+                            if manufacturer == "mercedes" or manufacturer == "mercedesbenz":
+                                manufacturer = "mercedes-benz"
+                            if manufacturer == "vw":
+                                manufacturer = "volkswagen"
+                            if manufacturer == "landrover":
+                                manufacturer = "land rover"
+                            if manufacturer == "harley":
+                                manufacturer = "harley-davidson"
+                            if manufacturer == "infinity":
+                                manufacturer = "infiniti"
+                            if manufacturer == "alfa":
+                                manufacturer = "alfa-romeo"
+                            if manufacturer == "aston":
+                                manufacturer = "aston-martin"
                             continue
                         if foundManufacturer:
                             make = make + word.lower() + " "

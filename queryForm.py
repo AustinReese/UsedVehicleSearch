@@ -7,7 +7,7 @@ from geopy.geocoders import Nominatim
 
 def queryForm(data):
     #this will be used to get the lat/long of cities, allowing for cars nearby searches
-    geo = Nominatim(user_agent="Hello")    
+    geo = Nominatim(user_agent="CraigslistFilter")    
     
     #grab data from user
     city = data.city.data

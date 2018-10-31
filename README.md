@@ -70,10 +70,6 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 * Allow for users to search by any city using latitude and longitude instead of specific craigslist regions.
 
-## Known Bugs
-
-* Manufacturer drop down reveals too many subjects
-
 ## Contributors
 
 This application is being developed by Austin Reese.

@@ -99,6 +99,7 @@ def queryDropdowns():
             manufacturers.append((item, item))
     manufacturers.append(("", ""))
     manufacturers.sort()
+    refinedManufacturers = []
     dropdowns["manufacturer"] = manufacturers
     years = []    
     for item in year:
