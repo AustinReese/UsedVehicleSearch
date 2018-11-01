@@ -27,7 +27,7 @@ pip3 install requests_html
 
 ## Deploying
 
-To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py (or download a cached version [here](https://files.fm/u/yw247cuc)) in order to generate the databases used by the application.
+To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py (or download a cached version [here](https://files.fm/u/rrf9z44h)) in order to generate the databases used by the application.
 
 Once these applications have completed, simply run app.py and copy and paste the address provided in the terminal into your browser.
 

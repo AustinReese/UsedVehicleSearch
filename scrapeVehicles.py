@@ -258,7 +258,8 @@ def runScraper():
                 curs.execute("DELETE FROM vehicles WHERE url = '{}'".format(cityUrl[0]))
                 deleted += 1
         print("Deleted {} old records".format(deleted))
-    print("vehicles.db successfully updated, {} entries exist".format(curs.rowcount))
+    print("vehicles.db successfully updated, {} entries exist".format(\
+        curs.execute("SELECT Count(*) FROM vehicles").fetchall()[0][0]))
     db.close()      
     
 def main():

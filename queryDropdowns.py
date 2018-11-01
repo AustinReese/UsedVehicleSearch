@@ -28,6 +28,7 @@ def queryDropdowns():
     size = curs.fetchall()
     curs.execute("SELECT DISTINCT transmission FROM vehicles")
     transmission = curs.fetchall()
+    db.close()
     transmissions = []    
     for item in transmission:
         item = item[0]
@@ -129,4 +130,6 @@ def queryDropdowns():
     dropdowns["states"] = stateTuples
     
     return dropdowns
+queryDropdowns()
+
 

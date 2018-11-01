@@ -75,10 +75,8 @@ def queryForm(data):
                         lat, long = loc.latitude, loc.longitude
                 else:
                     loc = geo.geocode("{}, {}".format(city, state))
-                    print("looking for both")
                     if loc:
                         lat, long = loc.latitude, loc.longitude
-                print(loc)
                 whereClause = whereClause + "lat BETWEEN '{}' AND '{}' AND long BETWEEN '{}' AND '{}' AND "\
                     .format(lat - .5, lat + .5, long - .5, long + .5)
             elif v == "state" and not criteriaDict["city"]:
