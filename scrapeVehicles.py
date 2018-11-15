@@ -4,8 +4,8 @@
 
 from lxml import html
 from datetime import datetime
-from random import shuffle
 from requests_html import HTMLSession
+import os
 import sqlite3
 
 def runScraper():
@@ -27,9 +27,6 @@ def runScraper():
     scraped = 0
     cities = 0
     
-    #list is shuffled so that we don't loop through the same cities in the same order each time
-    shuffle(citiesList)
-    
     #carBrands dictate what qualifies as a brand so we can snatch that data from the 'make' tag
     carBrands = ["ford", "toyota", "chevrolet", "chev", "chevy", "honda", "jeep", "hyundai", "subaru",
                  "kia", "gmc", "ram", "dodge", "mercedes-benz", "mercedes", "mercedesbenz",
@@ -41,6 +38,19 @@ def runScraper():
     
     #if the car year is beyond next year, we toss it out. this variable is used later
     nextYear = datetime.now().year + 1
+    
+    #simple txt file mechanism to track scraping progress
+    fileName = "static/trackScraping.txt"
+    exists = os.path.isfile(fileName)
+    if not exists:
+        tracker = open(fileName, "w")
+        tracker.write("0")
+        tracker.close()
+    
+    with open(fileName, "r") as tracker:
+        progress = int(tracker.readlines()[0])
+        
+    citiesList = citiesList[progress:]
     
     for city in citiesList:
         scrapedInCity = 0
@@ -258,6 +268,13 @@ def runScraper():
                 curs.execute("DELETE FROM vehicles WHERE url = '{}'".format(cityUrl[0]))
                 deleted += 1
         print("Deleted {} old records".format(deleted))
+        
+        #update progress file
+        with open(fileName, "w") as tracker:
+            tracker.write(str(cities))
+            
+    #delete tracker file
+    os.remove(fileName)
     print("vehicles.db successfully updated, {} entries exist".format(\
         curs.execute("SELECT Count(*) FROM vehicles").fetchall()[0][0]))
     db.close()      

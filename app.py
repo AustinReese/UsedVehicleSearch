@@ -51,7 +51,7 @@ def index():
     #render index.html with form passed through as a variable
     form = FilterForm()
     #validate_on_submit() runs when the form is submitted. we then redirect to search.html with the data fetched from queryForm.py
-    if form.validate_on_submit():
+    if form.is_submitted():
         data = queryForm(form)
         return render_template("search.html", data = data)
     return render_template("index.html", form = form)
