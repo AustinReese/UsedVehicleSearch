@@ -36,8 +36,6 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 * Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially
 
-* Track which cities have been scraped recently to add order to the scraping process
-
 * Allow users to specify a search radius and return more specific results when searching by location
 
 * Login/Logout functionality which allows users to save certain filter combinations and search results.
@@ -69,6 +67,8 @@ Once these applications have completed, simply run app.py and copy and paste the
 * Added photos to results page.
 
 * Allow for users to search by any city using latitude and longitude instead of specific craigslist regions.
+
+* Track which cities have been scraped recently to add order to the scraping process
 
 ## Contributors
 
