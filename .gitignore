@@ -5,5 +5,4 @@
 *.pyo
 *.csv
 *.zip
-/analysis
-/static/*.txt
+*.txt
