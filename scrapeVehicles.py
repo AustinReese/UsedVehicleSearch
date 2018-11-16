@@ -23,9 +23,8 @@ def runScraper():
     drive STRING, size STRING, type STRING, paint_color STRING, image_url STRING, lat FLOAT, long FLOAT)''')
     session = HTMLSession()
     
-    #scraped counts all entries gathered, cities counts cities looped through
+    #scraped counts all entries gathered
     scraped = 0
-    cities = 0
     
     #carBrands dictate what qualifies as a brand so we can snatch that data from the 'make' tag
     carBrands = ["ford", "toyota", "chevrolet", "chev", "chevy", "honda", "jeep", "hyundai", "subaru",
@@ -48,9 +47,9 @@ def runScraper():
         tracker.close()
     
     with open(fileName, "r") as tracker:
-        progress = int(tracker.readlines()[0])
+        cities = int(tracker.readlines()[0])
         
-    citiesList = citiesList[progress:]
+    citiesList = citiesList[cities:]
     
     for city in citiesList:
         scrapedInCity = 0

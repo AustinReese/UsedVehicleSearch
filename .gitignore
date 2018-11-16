@@ -6,3 +6,4 @@
 *.csv
 *.zip
 /analysis
+/static/*.txt
