@@ -13,6 +13,9 @@ You will need to install flask, sqlite3, wtforms, lxml, and requests_html.
 pip3 install Flask
 ```
 ```
+pip3 install setuptools
+```
+```
 pip3 install pysqlite3
 ```
 ```
@@ -24,6 +27,15 @@ pip3 install lxml
 ```
 pip3 install requests_html
 ```
+```
+pip3 install flask_wtf
+```
+```
+pip3 install flask_bootstrap
+```
+```
+pip3 install geopy
+```
 
 ## Deploying
 
@@ -32,17 +44,18 @@ To run this application locally you will first need to run both crawlCities.py a
 Once these applications have completed, simply run app.py and copy and paste the address provided in the terminal into your browser.
 
 ## Specific Future Implementations
-*  Remain on the form page when a search yields no results
 
-* Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially
+* Remain on the form page when a search yields no results.
 
-* Allow users to specify a search radius and return more specific results when searching by location
+* Allow users to specify a search radius and return more specific results when searching by location.
 
-* Login/Logout functionality which allows users to save certain filter combinations and search results.
-
-* Add Google maps API feature to allow users to browse sales in specific areas
+* Add Google maps API feature to allow users to browse sales in specific areas.
 
 ## Broad Future Implementations
+
+* Integrate visualization project with filter, let users generate graphs to help narrow decisisons when purchasing cars e.g. show me a line graph of the average price of Ford pickups based on the odometer of the vehicle (this code has already been written with pandas, rewriting with SQL will take some time).
+
+* Login/Logout functionality which allows users to save certain filter combinations and search results.
 
 * Better site layout, less bootstrap-esque and more creative.
 
@@ -51,6 +64,10 @@ Once these applications have completed, simply run app.py and copy and paste the
 * Frequent automated database updates.
 
 * User-specific sale tracking (price has changed, listing has been removed, etc.).
+
+## Blocked
+
+* Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially (I am worried about Craigslist blacklisting IPs).
 
 ## Completed Tasks
 
@@ -68,7 +85,7 @@ Once these applications have completed, simply run app.py and copy and paste the
 
 * Allow for users to search by any city using latitude and longitude instead of specific craigslist regions.
 
-* Track which cities have been scraped recently to add order to the scraping process
+* Track which cities have been scraped recently to add order to the scraping process.
 
 ## Contributors
 
