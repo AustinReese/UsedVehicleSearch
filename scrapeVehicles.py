@@ -20,7 +20,7 @@ def runScraper():
     
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(url STRING PRIMARY KEY, city STRING, price INTEGER, year INTEGER, manufacturer STRING,
     make STRING, condition STRING, cylinders STRING, fuel STRING, odometer INTEGER, title_status STRING, transmission STRING, VIN STRING,
-    drive STRING, size STRING, type STRING, paint_color STRING, image_url STRING, lat FLOAT, long FLOAT)''')
+    drive STRING, size STRING, type STRING, paint_color STRING, image_url STRING, desc STRING, lat FLOAT, long FLOAT)''')
     session = HTMLSession()
     
     #scraped counts all entries gathered
@@ -158,6 +158,7 @@ def runScraper():
                 image_url = None
                 lat = None
                 long = None
+                desc = None
                 
                 #now this code gets redundant. if we picked up a specific attr in the vehicleDict then we can change the variable from None.
                 #integer attributes (price/odometer) are handled in case the int() is unsuccessful, but i have never seen that be the case
@@ -240,6 +241,8 @@ def runScraper():
                 except:
                     pass
                 
+                #try to fetch lat/long, remain as None if they do not exist
+                
                 try:
                     location = tree.xpath("//div[@id='map']")
                     lat = float(location[0].attrib["data-latitude"])
@@ -247,11 +250,23 @@ def runScraper():
                 except:
                     pass
                 
+                #try to fetch a vehicle description, remain as None if it does not exist
+                
+                try:
+                    location = tree.xpath("//section[@id='postingbody']")
+                    desc = location[0].text_content().strip()
+                    desc = desc.rstrip()
+                    desc = desc.lstrip()
+                    desc = desc.strip("QR Code Link to This Post")
+                    desc = desc.strip("\n")
+                except:
+                    pass
+                
                 #finally we get to insert the entry into the database
                 curs.execute('''INSERT INTO vehicles(url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, 
-                paint_color, image_url, lat, long)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, 
-                                                                     size, vehicle_type, paint_color, image_url, lat, long))
+                paint_color, image_url, desc, lat, long)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, 
+                                                                     size, vehicle_type, paint_color, image_url, desc, lat, long))
                 scraped += 1
             #these lines will execute every time we grab a new page (after 120 entries)
             print("{} vehicles scraped".format(scraped))
@@ -276,7 +291,7 @@ def runScraper():
     os.remove(fileName)
     print("vehicles.db successfully updated, {} entries exist".format(\
         curs.execute("SELECT Count(*) FROM vehicles").fetchall()[0][0]))
-    db.close()      
+    db.close()
     
 def main():
     runScraper()
