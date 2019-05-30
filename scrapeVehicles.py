@@ -16,9 +16,9 @@ def runScraper():
     res = curs.execute("SELECT * FROM cities")
     citiesList = []
     for city in res:
-        citiesList.append(city[0])
-    
-    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(url STRING PRIMARY KEY, city STRING, price INTEGER, year INTEGER, manufacturer STRING,
+        citiesList.append(city)
+        
+    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(url STRING PRIMARY KEY, city STRING, city_url STRING, price INTEGER, year INTEGER, manufacturer STRING,
     make STRING, condition STRING, cylinders STRING, fuel STRING, odometer INTEGER, title_status STRING, transmission STRING, VIN STRING,
     drive STRING, size STRING, type STRING, paint_color STRING, image_url STRING, desc STRING, lat FLOAT, long FLOAT)''')
     session = HTMLSession()
@@ -54,7 +54,7 @@ def runScraper():
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
-        print("Scraping vehicles from {}, {} cities remain".format(city, len(citiesList) - cities))
+        print(f"Scraping vehicles from {city[1]}, {len(citiesList) - cities} cities remain")
         empty = False
         
         #townUrls is used to store each individual vehicle url from a city, therefore we can delete vehicle records from the database
@@ -63,15 +63,15 @@ def runScraper():
         
         #this loop executes until we are out of search results, craigslist sets this limit at 3000 and cities often contain the full 3000 records (but not always)
         while not empty:
-            print("Gathering entries {} through {}".format(scrapedInCity, scrapedInCity + 120))
+            print(f"Gathering entries {scrapedInCity} through {scrapedInCity + 120}")
             
             #now we scrape
             try:
-                searchUrl = "https://{}.craigslist.org/d/cars-trucks/search/cta?s={}".format(city, scrapedInCity)
+                searchUrl = f"{city[0]}/d/cars-trucks/search/cta?s={scrapedInCity}"
                 page = session.get(searchUrl)
             except:
                 #catch any excpetion and continue the loop if we cannot access a site for whatever reason
-                print("Failed to reach {}, entry has been dropped".format(searchUrl))
+                print(f"Failed to reach {searchUrl}, entries has been dropped")
                 continue
             
             #each search page contains 120 entries
@@ -83,7 +83,7 @@ def runScraper():
             if len(vehicles) == 0:
                 #if we no longer have entries, continue to the next city
                 empty = True
-                print("All done in {}, moving along...".format(city))
+                print(f"All done in {city[1]}, moving along...")
                 continue
             vehiclesList = []
             thrown = 0
@@ -98,7 +98,7 @@ def runScraper():
                     thrown += 1
                     continue
                 vehiclesList.append(vehicleDetails)
-            print("{} entries tossed due to inadequate data".format(thrown))
+            print(f"{thrown} entries tossed due to inadequate data")
             
             #loop through each vehicle
             for item in vehiclesList:
@@ -111,7 +111,7 @@ def runScraper():
                 
                 #vehicle url is a primary key in this database so we cant have repeats. if a record with the same url is found, we continue
                 #the loop as the vehicle has already been stored
-                curs.execute("SELECT 1 FROM vehicles WHERE url ='{}'".format(url))
+                curs.execute(f"SELECT 1 FROM vehicles WHERE url ='{url}'")
                 if curs.fetchall():
                     continue
                 try:
@@ -119,7 +119,7 @@ def runScraper():
                     page = session.get(url)
                     tree = html.fromstring(page.content)
                 except:
-                    print("Failed to reach {}, entry has been dropped".format(url))
+                    print(f"Failed to reach {url}, entry has been dropped")
                     continue
                 
                 attrs = tree.xpath('//span//b')
@@ -166,12 +166,12 @@ def runScraper():
                     try:
                         price = int(vehicleDict["price"])
                     except Exception as e:
-                        print("Could not parse price: {}".format(e))
+                        print(f"Could not parse price: {e}")
                 if "odomoter" in vehicleDict:
                     try:
                         odometer = int(vehicleDict["odometer"])
                     except Exception as e:
-                        print("Could not parse odometer: {}".format(e))
+                        print(f"Could not parse odometer: {e}")
                 if "condition" in vehicleDict:
                     condition = vehicleDict["condition"]
                 if "make" in vehicleDict:
@@ -258,14 +258,16 @@ def runScraper():
                     desc = desc.rstrip()
                     desc = desc.lstrip()
                     desc = desc.strip("QR Code Link to This Post")
-                    desc = desc.strip("\n")
-                except:
+                    desc = desc.lstrip()
+                    print(desc)
+                except Exception as e:
+                    print(e)
                     pass
                 
                 #finally we get to insert the entry into the database
-                curs.execute('''INSERT INTO vehicles(url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, 
+                curs.execute('''INSERT INTO vehicles(url, city, city_url, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, size, type, 
                 paint_color, image_url, desc, lat, long)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city, price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, 
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (url, city[1], city[0], price, year, manufacturer, make, condition, cylinders, fuel, odometer, title_status, transmission, VIN, drive, 
                                                                      size, vehicle_type, paint_color, image_url, desc, lat, long))
                 scraped += 1
             #these lines will execute every time we grab a new page (after 120 entries)
@@ -273,7 +275,7 @@ def runScraper():
             db.commit()
         
         #now to clean the database we grab all urls from the city that are already logged
-        curs.execute("SELECT url FROM vehicles WHERE city = '{}'".format(city))
+        curs.execute("SELECT url FROM vehicles WHERE city_url = '{}'".format(city[0]))
         deleted = 0
         
         #if a given url is not in townUrls (the urls that we just scraped) then the entry no longer exists and we remove it
