@@ -259,7 +259,6 @@ def runScraper():
                     desc = desc.lstrip()
                     desc = desc.strip("QR Code Link to This Post")
                     desc = desc.lstrip()
-                    print(desc)
                 except Exception as e:
                     print(e)
                     pass
