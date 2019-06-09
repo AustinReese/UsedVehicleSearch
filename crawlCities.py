@@ -1,7 +1,7 @@
 #crawlCities grabs every city on Craigslist
 
 from lxml import html
-import requests
+from requests_html import HTMLSession
 import sqlite3
 
 def storeCities():
@@ -12,7 +12,7 @@ def storeCities():
     curs.execute("CREATE TABLE IF NOT EXISTS cities(cityURL STRING PRIMARY KEY, cityTitle STRING)")
     
     #create requests session
-    s = requests.Session()
+    s = HTMLSession()
     
     #webpage 'origin' contains all US craigslist regions
     origin = s.get("https://geo.craigslist.org/iso/us/")
