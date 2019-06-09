@@ -15,7 +15,7 @@ def storeCities():
     s = requests.Session()
     
     #webpage 'origin' contains all US craigslist regions
-    origin = s.get(f"https://geo.craigslist.org/iso/us/")
+    origin = s.get("https://geo.craigslist.org/iso/us/")
     tree = (html.fromstring(origin.content))
     
     #cities = list of elements for each region

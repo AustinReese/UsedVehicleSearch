@@ -7,34 +7,8 @@ Craigslist Filter (working title) is a web application built with python and fla
 
 This application requires Python 3.6 or greater and several installable modules.
 
-You will need to install flask, sqlite3, wtforms, lxml, and requests_html.
-
 ```
-pip3 install Flask
-```
-```
-pip3 install setuptools
-```
-```
-pip3 install pysqlite3
-```
-```
-pip3 install wtforms
-```
-```
-pip3 install lxml
-```
-```
-pip3 install requests_html
-```
-```
-pip3 install flask_wtf
-```
-```
-pip3 install flask_bootstrap
-```
-```
-pip3 install geopy
+pip3 install -r requirements.txt 
 ```
 
 ## Deploying

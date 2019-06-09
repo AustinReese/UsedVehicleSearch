@@ -48,13 +48,13 @@ def runScraper():
     
     with open(fileName, "r") as tracker:
         cities = int(tracker.readlines()[0])
-        
+    citiesCount = len(citiesList)
     citiesList = citiesList[cities:]
     
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
-        print(f"Scraping vehicles from {city[1]}, {len(citiesList) - cities} cities remain")
+        print(f"Scraping vehicles from {city[1]}, {citiesCount - cities} cities remain")
         empty = False
         
         #townUrls is used to store each individual vehicle url from a city, therefore we can delete vehicle records from the database
