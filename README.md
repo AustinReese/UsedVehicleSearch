@@ -13,7 +13,7 @@ pip3 install -r requirements.txt
 
 ## Deploying
 
-To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py (or download a cached version [here](https://files.fm/u/p5z4fbkn) THIS LINK IS BROKEN AND WILL BE UPDATED SOON) in order to generate the databases used by the application.
+To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py in order to generate the databases used by the application.
 
 Once these applications have completed, simply run app.py and copy and paste the address provided in the terminal into your browser.
 
