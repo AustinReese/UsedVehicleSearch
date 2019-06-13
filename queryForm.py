@@ -37,7 +37,7 @@ def queryForm(data):
                     drive: "drive", size: "size", vType: "type", title: "title_status",
                     color: "paint_color", priceStart: "price", priceEnd: "price", yearStart: "year", yearEnd: "year", odomStart: "odometer", odomEnd: "odometer"}
     
-    whereClause = ""
+    whereClause = "WHERE "
     for k, v in criteriaDict.items():
         #if not k then the field was left blank and we do not include it in the query, otherwise we search by it
         if k != None and k != "":
@@ -65,7 +65,7 @@ def queryForm(data):
                     priceEnd = 10000000
                 whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, priceStart, priceEnd)
             elif v == "make":
-                whereClause = whereClause + "{} CONTAINS {} AND ".format(v, k)
+                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
             elif v == "city":
                 # all results near a city
                 lat, long = 0, 0
@@ -89,11 +89,8 @@ def queryForm(data):
     whereClause = whereClause[:-5]
         
     #finally our query
-    if not whereClause:
-        query = "SELECT * FROM vehicles LIMIT 100;"
-    else:
-        query = "SELECT * FROM vehicles WHERE {} LIMIT 102;".format(whereClause)
-            
+    query = "SELECT * FROM vehicles {} LIMIT 102;".format(whereClause)
+    print(query)
     db = sqlite3.connect("cities.db")
     curs = db.cursor()
     curs.execute(query)

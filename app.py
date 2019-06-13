@@ -4,7 +4,7 @@ errHandle()
 
 #this is where the magic happens, we currently have only one route but that will change
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import Form, BooleanField, StringField, IntegerField, SelectField, validators
@@ -53,8 +53,16 @@ def index():
     #validate_on_submit() runs when the form is submitted. we then redirect to search.html with the data fetched from queryForm.py
     if form.is_submitted():
         data = queryForm(form)
-        return render_template("search.html", data = data)
+        return redirect(url_for('search', data = data, loc = 0))
     return render_template("index.html", form = form)
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    data = request.args.get('data')
+    loc = request.args.get('loc')    
+    print("---------------------------------------------------------------------------")
+    return render_template("search.html", data = data[loc: loc + 102])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
