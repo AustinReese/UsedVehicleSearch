@@ -65,7 +65,7 @@ def queryForm(data):
                     priceEnd = 10000000
                 whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, priceStart, priceEnd)
             elif v == "make":
-                whereClause = whereClause + "{} CONTAINS {} AND ".format(v, k)
+                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
             elif v == "city":
                 # all results near a city
                 lat, long = 0, 0
@@ -90,7 +90,7 @@ def queryForm(data):
         
     #finally our query
     if not whereClause:
-        query = "SELECT * FROM vehicles LIMIT 100;"
+        query = "SELECT * FROM vehicles LIMIT 102;"
     else:
         query = "SELECT * FROM vehicles WHERE {} LIMIT 102;".format(whereClause)
             
