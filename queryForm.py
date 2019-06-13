@@ -37,7 +37,7 @@ def queryForm(data):
                     drive: "drive", size: "size", vType: "type", title: "title_status",
                     color: "paint_color", priceStart: "price", priceEnd: "price", yearStart: "year", yearEnd: "year", odomStart: "odometer", odomEnd: "odometer"}
     
-    whereClause = "WHERE "
+    whereClause = ""
     for k, v in criteriaDict.items():
         #if not k then the field was left blank and we do not include it in the query, otherwise we search by it
         if k != None and k != "":
@@ -89,8 +89,11 @@ def queryForm(data):
     whereClause = whereClause[:-5]
         
     #finally our query
-    query = "SELECT * FROM vehicles {} LIMIT 102;".format(whereClause)
-    print(query)
+    if not whereClause:
+        query = "SELECT * FROM vehicles LIMIT 102;"
+    else:
+        query = "SELECT * FROM vehicles WHERE {} LIMIT 102;".format(whereClause)
+            
     db = sqlite3.connect("cities.db")
     curs = db.cursor()
     curs.execute(query)
