@@ -8,6 +8,7 @@ from requests_html import HTMLSession
 import os
 import sqlite3
 
+
 def runScraper():
     db = sqlite3.connect("cities.db")
     curs = db.cursor()

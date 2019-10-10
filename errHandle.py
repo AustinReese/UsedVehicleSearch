@@ -9,4 +9,4 @@ def errHandle():
         curs.execute("SELECT 1 FROM vehicles LIMIT 1")
         db.close()
     except:
-        raise EnvironmentError("Please install cities.db from https://files.fm/u/yw247cuc and place the current directory")
+        raise EnvironmentError("Please run both crawlCities.py and scrapeVehicles.py")
