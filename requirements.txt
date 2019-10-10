@@ -1,0 +1,8 @@
+pysqlite3
+requests_html
+lxml
+geopy
+Flask-WTF
+Flask
+Flask-Bootstrap
+wtforms
