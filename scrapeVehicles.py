@@ -106,6 +106,9 @@ def runScraper():
                 url = item[0]
                 idpk = url.split("/")[-1].strip(".html")
                 
+                #add the id to scrapedIds for database cleaning purposes
+                scrapedIds.add(idpk)
+                
                 #vehicle id is a primary key in this database so we cant have repeats. if a record with the same url is found, we continue
                 #the loop as the vehicle has already been stored                
                 curs.execute(f"SELECT 1 FROM vehicles WHERE id ='{idpk}'")
@@ -113,8 +116,6 @@ def runScraper():
                     skipped += 1
                     continue                
                 
-                #add the id to scrapedIds for database cleaning purposes
-                scrapedIds.add(idpk)
                 vehicleDict = {}
                 vehicleDict["price"] = int(item[1].strip("$"))
                 
@@ -284,12 +285,11 @@ def runScraper():
         deleted = 0
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
-        
+        print(scrapedIds)
         for oldId in curs.fetchall():
             print(oldId)
-            print(scrapedIds)
             if oldId[0] not in scrapedIds:
-                curs.execute("DELETE FROM vehicles WHERE id = '{}'".format(oldIds[0]))
+                curs.execute("DELETE FROM vehicles WHERE id = '{}'".format(oldId[0]))
                 deleted += 1
         print("Deleted {} old records, {} records skipped as they are already stored".format(deleted, skipped))
         conn.commit()
