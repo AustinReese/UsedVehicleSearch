@@ -286,6 +286,7 @@ def runScraper():
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
         print(scrapedIds)
+        print(len(scrapedIds))
         for oldId in curs.fetchall():
             print(oldId)
             if oldId[0] not in scrapedIds:
