@@ -19,10 +19,12 @@ def runScraper():
     citiesList = []
     for city in curs.fetchall():
         citiesList.append(city)
-        
-    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, craigslist_region TEXT, city_url TEXT, price BIGINT, year BIGINT, manufacturer TEXT,
-    model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT,
-    drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, description TEXT, lat REAL, long REAL)''')
+    
+    curs.execute('drop table if exists vehicles')
+    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, craigslist_region TEXT, region_url TEXT, 
+    city TEXT, state TEXT, price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
+    odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
+    description TEXT, lat REAL, long REAL)''')
     session = HTMLSession()
     
     #scraped counts all entries gathered
@@ -114,10 +116,9 @@ def runScraper():
                 
                 #vehicle id is a primary key in this database so we cant have repeats. if a record with the same url is found, we continue
                 #the loop as the vehicle has already been stored                
-                curs.execute(f"SELECT 1 FROM vehicles WHERE id ='{idpk}'")
-                if curs.fetchall():
+                curs.execute(f"SELECT 1 FROM vehicles WHERE id = {idpk}")
+                if len(curs.fetchall()) != 0:
                     skipped += 1
-                    print("in already")
                     continue
                 
                 vehicleDict = {}
@@ -149,6 +150,8 @@ def runScraper():
                     
                 #we will assume that each of these variables are None until we hear otherwise
                 #that way, try/except clauses can simply pass and leave these values as None
+                city = None
+                state = None
                 price = None
                 year = None
                 manufacturer = None
@@ -242,7 +245,7 @@ def runScraper():
                 if "paint color" in vehicleDict:
                     paint_color = vehicleDict["paint color"]
                     
-                #now lets fetch the image url, latitude, and longitude if they exist
+                #now lets fetch the image url if exists
                 
                 try:
                     img = tree.xpath('//div[@class="slide first visible"]//img')
@@ -250,14 +253,18 @@ def runScraper():
                 except:
                     pass
                 
-                #try to fetch lat/long, remain as None if they do not exist
+                #try to fetch lat/long and city/state, remain as None if they do not exist
                 
                 try:
                     location = tree.xpath("//div[@id='map']")
                     lat = float(location[0].attrib["data-latitude"])
                     long = float(location[0].attrib["data-longitude"])
-                except:
-                    pass
+                    locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4".format(long, lat))
+                    locationTree = html.fromstring(locationInfo.content)
+                    locationData = locationTree.xpath("//div[@id='pl_gov_census_geo_geocoder_domain_GeographyResult']//div")
+                    print(locationData)
+                except Exception as e:
+                    print(e)
                 
                 #try to fetch a vehicle description, remain as None if it does not exist
                 
@@ -273,10 +280,10 @@ def runScraper():
                     pass
                 
                 #finally we get to insert the entry into the database
-                curs.execute('''INSERT INTO vehicles(id, url, craigslist_region, city_url, price, year, manufacturer, model, condition,
+                curs.execute('''INSERT INTO vehicles(id, url, craigslist_region, region_url, city, state price, year, manufacturer, model, condition,
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
                 paint_color, image_url, description, lat, long)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
                     (idpk, url, city[1], city[0], price, year, manufacturer, model, condition, cylinders,
                      fuel, odometer, title_status, transmission, VIN, drive, 
                      size, vehicle_type, paint_color, image_url, description, lat, long))
