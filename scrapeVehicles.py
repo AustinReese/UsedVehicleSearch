@@ -104,7 +104,10 @@ def runScraper():
             #loop through each vehicle
             for item in vehiclesList:
                 url = item[0]
-                idpk = url.split("/")[-1].strip(".html")
+                try:
+                    idpk = int(url.split("/")[-1].strip(".html"))
+                except ValueError as e:
+                    print("{} does not have a valid id: {}".format(url, e))
                 
                 #add the id to scrapedIds for database cleaning purposes
                 scrapedIds.add(idpk)
@@ -285,11 +288,9 @@ def runScraper():
         deleted = 0
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
-        print(scrapedIds)
-        print(len(scrapedIds))
         for oldId in curs.fetchall():
-            print(oldId)
-            if oldId[0] not in scrapedIds:
+            print(type(oldId[0]))
+            if int(oldId[0]) not in scrapedIds:
                 curs.execute("DELETE FROM vehicles WHERE id = '{}'".format(oldId[0]))
                 deleted += 1
         print("Deleted {} old records, {} records skipped as they are already stored".format(deleted, skipped))
