@@ -1,15 +1,16 @@
 #crawlCities grabs every city on Craigslist
 
+import psycopg2
 from lxml import html
 from requests_html import HTMLSession
-import sqlite3
+from connect import connect
 
 def storeCities():
-    #connect to database
-    db = sqlite3.connect("cities.db")
-    curs = db.cursor()
+    conn = connect()
+
+    curs = conn.cursor()
     curs.execute("DROP TABLE IF EXISTS cities")
-    curs.execute("CREATE TABLE IF NOT EXISTS cities(cityURL STRING PRIMARY KEY, cityTitle STRING)")
+    curs.execute("CREATE TABLE IF NOT EXISTS cities(cityURL TEXT PRIMARY KEY, cityTitle TEXT)")
     
     #create requests session
     s = HTMLSession()
@@ -31,9 +32,12 @@ def storeCities():
             boldAt += 1
             
         #insert url and city name, easy stuff
-        curs.execute('''INSERT INTO cities(cityURL, cityTitle) VALUES(?,?)''', (item.attrib["href"], name))
-        db.commit()
-    db.close()
+        curs.execute(f'''
+        INSERT INTO cities VALUES('{item.attrib['href']}', '{name.replace("'", "''")}')
+        ''')
+        conn.commit()
+        print(f"inserted {name}")
+    conn.close()
     
 def main():
     storeCities()

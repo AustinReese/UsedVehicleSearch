@@ -7,3 +7,6 @@
 *.zip
 *.txt
 *.swp
+*.pem
+creds/
+__pycache__/

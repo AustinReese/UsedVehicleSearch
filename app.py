@@ -1,9 +1,3 @@
-from errHandle import errHandle
-
-errHandle()
-
-#this is where the magic happens, we currently have only one route but that will change
-
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap

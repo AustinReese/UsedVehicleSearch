@@ -1,11 +1,12 @@
 #this is a work in progress that will grab unique column values to allow for dropdown menus instead of text boxes in the search form
 
-import sqlite3
+import psycopg2
+from connect import connect
 
 def queryDropdowns():
     dropdowns = {}
-    db = sqlite3.connect("cities.db")
-    curs = db.cursor()
+    conn = connect()
+    curs = conn.cursor()
     curs.execute("SELECT DISTINCT cylinders FROM vehicles")
     cylinders = curs.fetchall()
     curs.execute("SELECT DISTINCT fuel FROM vehicles")
@@ -28,7 +29,7 @@ def queryDropdowns():
     size = curs.fetchall()
     curs.execute("SELECT DISTINCT transmission FROM vehicles")
     transmission = curs.fetchall()
-    db.close()
+    conn.close()
     transmissions = []    
     for item in transmission:
         item = item[0]

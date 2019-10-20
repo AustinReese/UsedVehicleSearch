@@ -1,8 +1,9 @@
 #queryForm.py takes data submitted by the user through the form and constructs an sql query to grab data that matches their specifications
 
-import sqlite3
+import psycopg2
 from datetime import datetime
 from geopy.geocoders import Nominatim
+from connect import connect
 
 
 def queryForm(data):
@@ -94,11 +95,11 @@ def queryForm(data):
     else:
         query = "SELECT * FROM vehicles WHERE {} LIMIT 102;".format(whereClause)
             
-    db = sqlite3.connect("cities.db")
-    curs = db.cursor()
+    conn = connect()
+    curs = conn.cursor()
     curs.execute(query)
     res = curs.fetchall()
-    db.close()
+    conn.close()
         
     #return our results
     return res
