@@ -19,7 +19,7 @@ def runScraper():
     citiesList = []
     for city in curs.fetchall():
         citiesList.append(city)
-    curs.execute('drop table if exists vehicles')
+        
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, craigslist_region TEXT, city_url TEXT, price BIGINT, year BIGINT, manufacturer TEXT,
     model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT,
     drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, description TEXT, lat REAL, long REAL)''')
@@ -117,7 +117,8 @@ def runScraper():
                 curs.execute(f"SELECT 1 FROM vehicles WHERE id ='{idpk}'")
                 if curs.fetchall():
                     skipped += 1
-                    continue                
+                    print("in already")
+                    continue
                 
                 vehicleDict = {}
                 vehicleDict["price"] = int(item[1].strip("$"))
@@ -289,7 +290,6 @@ def runScraper():
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
         for oldId in curs.fetchall():
-            print(type(oldId[0]))
             if int(oldId[0]) not in scrapedIds:
                 curs.execute("DELETE FROM vehicles WHERE id = '{}'".format(oldId[0]))
                 deleted += 1
