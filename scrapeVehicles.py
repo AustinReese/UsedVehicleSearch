@@ -20,7 +20,7 @@ def runScraper():
     for city in curs.fetchall():
         citiesList.append(city)
     curs.execute('drop table if exists vehicles')
-    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, city TEXT, city_url TEXT, price BIGINT, year BIGINT, manufacturer TEXT,
+    curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, craigslist_region TEXT, city_url TEXT, price BIGINT, year BIGINT, manufacturer TEXT,
     model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT,
     drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, description TEXT, lat REAL, long REAL)''')
     session = HTMLSession()
@@ -268,7 +268,7 @@ def runScraper():
                     pass
                 
                 #finally we get to insert the entry into the database
-                curs.execute('''INSERT INTO vehicles(id, url, city, city_url, price, year, manufacturer, model, condition,
+                curs.execute('''INSERT INTO vehicles(id, url, craigslist_region, city_url, price, year, manufacturer, model, condition,
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
                 paint_color, image_url, description, lat, long)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
@@ -284,8 +284,11 @@ def runScraper():
         deleted = 0
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
-        for oldIds in curs.fetchall():
-            if oldIds[0] not in scrapedIds:
+        
+        for oldId in curs.fetchall():
+            print(oldId)
+            print(scrapedIds)
+            if oldId[0] not in scrapedIds:
                 curs.execute("DELETE FROM vehicles WHERE id = '{}'".format(oldIds[0]))
                 deleted += 1
         print("Deleted {} old records, {} records skipped as they are already stored".format(deleted, skipped))
