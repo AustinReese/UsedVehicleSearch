@@ -4,6 +4,7 @@
 
 import os
 import psycopg2
+from json import loads
 from lxml import html
 from datetime import datetime
 from requests_html import HTMLSession
@@ -19,10 +20,9 @@ def runScraper():
     citiesList = []
     for city in curs.fetchall():
         citiesList.append(city)
-    
     curs.execute('drop table if exists vehicles')
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, craigslist_region TEXT, region_url TEXT, 
-    city TEXT, state TEXT, price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
+    county TEXT, state TEXT, price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
     odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
     description TEXT, lat REAL, long REAL)''')
     session = HTMLSession()
@@ -150,7 +150,7 @@ def runScraper():
                     
                 #we will assume that each of these variables are None until we hear otherwise
                 #that way, try/except clauses can simply pass and leave these values as None
-                city = None
+                county = None
                 state = None
                 price = None
                 year = None
@@ -259,12 +259,30 @@ def runScraper():
                     location = tree.xpath("//div[@id='map']")
                     lat = float(location[0].attrib["data-latitude"])
                     long = float(location[0].attrib["data-longitude"])
-                    locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4".format(long, lat))
-                    locationTree = html.fromstring(locationInfo.content)
-                    locationData = locationTree.xpath("//div[@id='pl_gov_census_geo_geocoder_domain_GeographyResult']//div")
-                    print(locationData)
+                    locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
+                    locationJsonPage = html.fromstring(locationInfo.content)
+                    locationJson = loads(locationJsonPage.text)
+                    try:
+                        #sometimes the API will randomly return malfomed data, if this is the case we request one more time
+                        if "status" in locationJson["result"]["geographies"]["States"][0]:
+                            locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
+                            locationJsonPage = html.fromstring(locationInfo.content)
+                            locationJson = loads(locationJsonPage.text)
+                        state = locationJson["result"]["geographies"]["States"][0]["BASENAME"]
+                    except KeyError as e:
+                        print("keyerror" + str(e))                        
+                        state = None
+                    try:
+                        if "status" in locationJson["result"]["geographies"]["Counties"][0]:
+                            locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
+                            locationJsonPage = html.fromstring(locationInfo.content)
+                            locationJson = loads(locationJsonPage.text)
+                        county = locationJson["result"]["geographies"]["Counties"][0]["BASENAME"]
+                    except KeyError as e:
+                        print("keyerror" + str(e))
+                        county = None
                 except Exception as e:
-                    print(e)
+                    print("exception: " + str(e))
                 
                 #try to fetch a vehicle description, remain as None if it does not exist
                 
@@ -275,16 +293,16 @@ def runScraper():
                     description = description.lstrip()
                     description = description.strip("QR Code Link to This Post")
                     description = description.lstrip()
-                except Exception as e:
-                    print(e)
+                except:
                     pass
+                    
                 
                 #finally we get to insert the entry into the database
-                curs.execute('''INSERT INTO vehicles(id, url, craigslist_region, region_url, city, state price, year, manufacturer, model, condition,
+                curs.execute('''INSERT INTO vehicles(id, url, craigslist_region, region_url, county, state, price, year, manufacturer, model, condition,
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
                 paint_color, image_url, description, lat, long)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
-                    (idpk, url, city[1], city[0], price, year, manufacturer, model, condition, cylinders,
+                    (idpk, url, city[1], city[0], county, state, price, year, manufacturer, model, condition, cylinders,
                      fuel, odometer, title_status, transmission, VIN, drive, 
                      size, vehicle_type, paint_color, image_url, description, lat, long))
                 scraped += 1
