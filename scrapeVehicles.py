@@ -20,11 +20,13 @@ def runScraper():
     citiesList = []
     for city in curs.fetchall():
         citiesList.append(city)
-
+    curs.execute('drop table if exists vehicles')
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, region TEXT, region_url TEXT, 
     price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
     odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
     description TEXT, lat REAL, long REAL)''')
+    conn.commit()
+    return
     session = HTMLSession()
     
     #scraped counts all entries gathered
@@ -257,8 +259,8 @@ def runScraper():
                     location = tree.xpath("//div[@id='map']")
                     lat = float(location[0].attrib["data-latitude"])
                     long = float(location[0].attrib["data-longitude"])
-                except Exception as e:
-                    print("exception: " + str(e))
+                except:
+                    pass
                 
                 #try to fetch a vehicle description, remain as None if it does not exist
                 
@@ -286,7 +288,7 @@ def runScraper():
             print("{} vehicles scraped".format(scraped))
         
         #now to clean the database we grab all urls from the city that are already logged
-        curs.execute("SELECT id FROM vehicles WHERE city_url = '{}'".format(city[0]))
+        curs.execute("SELECT id FROM vehicles WHERE region_url = '{}'".format(city[0]))
         deleted = 0
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
