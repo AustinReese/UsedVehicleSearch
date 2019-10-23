@@ -26,7 +26,6 @@ def runScraper():
     odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
     description TEXT, lat REAL, long REAL)''')
     conn.commit()
-    return
     session = HTMLSession()
     
     #scraped counts all entries gathered
