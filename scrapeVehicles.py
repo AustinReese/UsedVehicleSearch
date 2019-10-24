@@ -304,8 +304,9 @@ def runScraper():
             
     #delete tracker file
     os.remove(fileName)
+    count = curs.execute("SELECT Cout(*) FROM vehicles")
     print("vehicles.db successfully updated, {} entries exist".format(\
-        curs.execute("SELECT Count(*) FROM vehicles").fetchall()[0][0]))
+        curs.fetchall()[0][0]))
     conn.close()
     
 def main():

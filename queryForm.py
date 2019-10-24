@@ -11,10 +11,9 @@ def queryForm(data):
     geo = Nominatim(user_agent="CraigslistFilter")    
     
     #grab data from user
-    city = data.city.data
-    state = data.state.data
+    location = data.location.data
     manu = data.manufacturer.data
-    make = data.make.data
+    model = data.model.data
     cond = data.condition.data
     cyl = data.cylinders.data
     fuel = data.fuel.data
@@ -33,7 +32,7 @@ def queryForm(data):
     odomEnd = data.odometerEnd.data
         
     #construct dict of strings for the query
-    criteriaDict = {city: "city", manu: "manufacturer", make: "make", cond: "condition", 
+    criteriaDict = {location: "location", manu: "manufacturer", model: "model", cond: "condition", 
                     cyl: "cylinders", tran: "transmission", vin: "vin", fuel: "fuel",
                     drive: "drive", size: "size", vType: "type", title: "title_status",
                     color: "paint_color", priceStart: "price", priceEnd: "price", yearStart: "year", yearEnd: "year", odomStart: "odometer", odomEnd: "odometer"}
@@ -65,24 +64,16 @@ def queryForm(data):
                 if priceEnd == None:
                     priceEnd = 10000000
                 whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, priceStart, priceEnd)
-            elif v == "make":
+            elif v == "model":
                 whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
-            elif v == "city":
+            elif v == "location":
                 # all results near a city
                 lat, long = 0, 0
-                if not state:
-                    loc = geo.geocode(city)
-                    if loc:
-                        lat, long = loc.latitude, loc.longitude
-                else:
-                    loc = geo.geocode("{}, {}".format(city, state))
-                    if loc:
-                        lat, long = loc.latitude, loc.longitude
-                whereClause = whereClause + "lat BETWEEN '{}' AND '{}' AND long BETWEEN '{}' AND '{}' AND "\
+                loc = geo.geocode(location)
+                if loc:
+                    lat, long = loc.latitude, loc.longitude
+                    whereClause = whereClause + "lat BETWEEN '{}' AND '{}' AND long BETWEEN '{}' AND '{}' AND "\
                     .format(lat - .5, lat + .5, long - .5, long + .5)
-            elif v == "state" and not criteriaDict["city"]:
-                # all results within a state
-                pass
             else:
                 whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
     
@@ -100,6 +91,6 @@ def queryForm(data):
     curs.execute(query)
     res = curs.fetchall()
     conn.close()
-        
+    
     #return our results
     return res

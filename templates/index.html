@@ -3,14 +3,11 @@
 <form action="/" method=POST>
 	<h2 class="form-login-heading text-center">Search Craigslist</h2>
 	{{ form.csrf_token }}
-	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.city) }}
+	<div class="col-md-6 text-center">
+  		{{ wtf.form_field(form.location) }}
   	</div>
   	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.state) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.make) }}
+  		{{ wtf.form_field(form.model) }}
   	</div>
   	<div class="col-md-3 text-center">
   		{{ wtf.form_field(form.vin) }} 
