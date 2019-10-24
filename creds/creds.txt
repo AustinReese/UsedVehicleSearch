@@ -1,5 +1,0 @@
-user|reesau01
-password|yBvVgKq7aR7ontbx03ml
-name|craigslistvehicles
-endpoint|craigslistvehicles.cfszw4rsccwz.us-east-1.rds.amazonaws.com
-port|5432
