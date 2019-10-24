@@ -131,6 +131,6 @@ def queryDropdowns():
     dropdowns["states"] = stateTuples
     
     return dropdowns
-queryDropdowns()
+
 
 
