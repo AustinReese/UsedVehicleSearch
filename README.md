@@ -1,21 +1,9 @@
 # Craigslist Filter
 #### In Development...
 
-Craigslist Filter (working title) is a web application built with python and flask which scrapes data about vehicles for sale from all Craigslist pages in America and allows users to filter them by criteria such as city, price, manufacturer, and odometer. This project is currently in development and is not yet completed.
+Craigslist Filter (working title) is a web application built with python and flask which scrapes data about vehicles for sale from all Craigslist pages in America and allows users to filter them by criteria such as city, price, manufacturer, and odometer. This project is currently in development.
 
-## Installing
-
-This application requires Python 3.6 or greater
-
-```
-pip3 install -r requirements.txt 
-```
-
-## Deploying
-
-To run this application locally you will first need to run both crawlCities.py and scrapeVehicles.py in order to generate the databases used by the application
-
-Once these applications have completed, simply run app.py and copy and paste the address provided in the terminal into your browser
+View the application [here](https://craigslist-filter.herokuapp.com/)
 
 ## Specific Future Implementations
 
@@ -26,8 +14,6 @@ Once these applications have completed, simply run app.py and copy and paste the
 * Add Google maps API feature to allow users to browse sales in specific areas
 
 ## Broad Future Implementations
-
-* Frequent automated database updates
 
 * User-specific sale tracking (price has changed, listing has been removed, etc.)
 
@@ -54,6 +40,10 @@ Once these applications have completed, simply run app.py and copy and paste the
 * Track which cities have been scraped recently to add order to the scraping process
 
 * User-entered vehicle description has been added to the vehicles table, paving the road for in-depth machine learning.
+
+* Frequent automated database updates
+
+* App deployed
 
 ## Contributors
 

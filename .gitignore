@@ -5,8 +5,8 @@
 *.pyo
 *.csv
 *.zip
-
+*.txt
 *.swp
 *.pem
-
+creds/
 __pycache__/
