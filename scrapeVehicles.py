@@ -24,7 +24,7 @@ def runScraper():
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, region TEXT, region_url TEXT, 
     price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
     odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
-    description TEXT, lat REAL, long REAL)''')
+    description TEXT, lat REAL, long REAL, state TEXT)''')
     conn.commit()
     session = HTMLSession()
     
@@ -59,7 +59,7 @@ def runScraper():
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
-        print(f"Scraping vehicles from {city[1]}, {citiesCount - cities} cities remain")
+        print(f"Scraping vehicles from {city[2]}, {citiesCount - cities} cities remain")
         empty = False
         
         #scrapedIds is used to store each individual vehicle id from a city, therefore we can delete vehicle records from the database
@@ -75,7 +75,7 @@ def runScraper():
             
             #now we scrape
             try:
-                searchUrl = f"{city[0]}/d/cars-trucks/search/cta?s={scrapedInCity}"
+                searchUrl = f"{city[1]}/d/cars-trucks/search/cta?s={scrapedInCity}"
                 page = session.get(searchUrl)
             except Exception as e:
                 #catch any excpetion and continue the loop if we cannot access a site for whatever reason
@@ -277,11 +277,11 @@ def runScraper():
                 #finally we get to insert the entry into the database
                 curs.execute('''INSERT INTO vehicles(id, url, region, region_url, price, year, manufacturer, model, condition,
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
-                paint_color, image_url, description, lat, long)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
+                paint_color, image_url, description, lat, long, state)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
                     (idpk, url, city[1], city[0], price, year, manufacturer, model, condition, cylinders,
                      fuel, odometer, title_status, transmission, VIN, drive, 
-                     size, vehicle_type, paint_color, image_url, description, lat, long))
+                     size, vehicle_type, paint_color, image_url, description, lat, long,city[3]))
                 scraped += 1
             #these lines will execute every time we grab a new page (after 120 entries)
             print("{} vehicles scraped".format(scraped))
