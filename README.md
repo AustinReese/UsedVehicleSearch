@@ -1,7 +1,7 @@
 # Craigslist Filter
 #### In Development...
 
-Craigslist Filter (working title) is a web application built with python and flask which scrapes data about vehicles for sale from all Craigslist pages in America and allows users to filter them by criteria such as city, price, manufacturer, and odometer. This project is currently in development.
+Craigslist Filter (working title) is a web application built with python and flask which scrapes used car sales data weekly from all seperate craigslist sites in the United States and allows users to filter them by criteria such as (but not limited to) city, price, manufacturer, and odometer. This project is currently in development.
 
 View the application [here](https://craigslist-filter.herokuapp.com/)
 
@@ -19,7 +19,11 @@ View the application [here](https://craigslist-filter.herokuapp.com/)
 
 ## Blocked
 
-* Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially (I am worried about Craigslist blacklisting IPs)
+* Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially (I am worried about Craigslist blocking my EC2 IP)
+
+## Issues
+
+* RDS (postgres) and EC2 both currently sit on a free AWS educate account, eventually the free credits will run out and the application will cease to function. This is not good, I am unsure how I will proceed once this occurs
 
 ## Completed Tasks
 
