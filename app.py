@@ -6,6 +6,7 @@ from wtforms.validators import Length, ValidationError, DataRequired
 from queryForm import queryForm
 from queryDropdowns import queryDropdowns
 from datetime import datetime
+from os import environ
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "CraigsistFilter"
@@ -50,4 +51,6 @@ def index():
     return render_template("index.html", form = form)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug = True)
