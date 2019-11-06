@@ -3,7 +3,7 @@
 
 Craigslist Filter (working title) is a web application built with python and flask which scrapes used car sales data weekly from all seperate craigslist sites in the United States and allows users to filter them by criteria such as (but not limited to) city, price, manufacturer, and odometer. This project is currently in development.
 
-The application is deployed, but memory limitations of free heroku deployments cause frequent crashes. Despite automated dyno restarts heroku can't always keep up. View the application [here](https://craigslist-filter.herokuapp.com/)
+The application is deployed, but memory limitations of free heroku deployments cause frequent time-outs. Despite automated dyno restarts heroku can't always keep up. View the application [here](https://craigslist-filter.herokuapp.com/)
 
 ## Specific Future Implementations
 
