@@ -64,7 +64,7 @@ def runScraper():
         
         #scrapedIds is used to store each individual vehicle id from a city, therefore we can delete vehicle records from the database
         #if their id is no longer in scrapedIds under the assumption that the entry has been removed from craigslist
-        scrapedIds = set([]) 
+        scrapedIds = set([])
         
         #track items skipped that are already in the database
         skipped = 0
