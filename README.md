@@ -5,6 +5,8 @@ Craigslist Filter (working title) is a web application built with python and fla
 
 View the application [here](https://craigslist-filter.herokuapp.com/). (Due to infrequent use, you may need to refresh the page once or twice to allow time to connect to the RDS database)
 
+You can also browse an older version of the dataset in CSV form [here](https://www.kaggle.com/austinreese/craigslist-carstrucks-data)
+
 ## Specific Future Implementations
 
 * Remain on the form page when a search yields no results
