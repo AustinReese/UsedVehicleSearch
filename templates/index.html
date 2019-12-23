@@ -2,6 +2,10 @@
 {% block content %}
 <form action="/" method=POST>
 	<h2 class="form-login-heading text-center">Search Craigslist</h2>
+    {% if success == false %}
+  <div class="col-md-12 text-center">
+    <h2>Your search yielded no results</h2>
+  {% endif %}
 	{{ form.csrf_token }}
 	<div class="col-md-6 text-center">
   		{{ wtf.form_field(form.location) }}
@@ -60,6 +64,9 @@
   	<div class="col-md-3 text-center">
   		{{ wtf.form_field(form.odometerEnd) }}
   	</div>
+        <div class="col-md-3 text-center">
+      {{ wtf.form_field(form.sortBy) }}
+    </div>
   	<div class="col-md-12 text-center">
 		<input class="btn btn-primary" type=submit val=go>
 	</div>

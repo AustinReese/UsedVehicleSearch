@@ -9,8 +9,6 @@ You can also browse an older version of the dataset in CSV form [here](https://w
 
 ## Specific Future Implementations
 
-* Remain on the form page when a search yields no results
-
 * Allow users to specify a search radius and return more specific results when searching by location
 
 * Add Google maps API feature to allow users to browse sales in specific areas
@@ -22,10 +20,6 @@ You can also browse an older version of the dataset in CSV form [here](https://w
 ## Blocked
 
 * Pivot to multiprocessing to allow for many requests to be made at once, speeding up the scraper exponentially (I am worried about Craigslist blocking my EC2 IP)
-
-## Issues
-
-* RDS (postgres) and EC2 both currently sit on a free AWS educate account, eventually the free credits will run out and the application will cease to function. This is not good, I am unsure how I will proceed once this occurs
 
 ## Completed Tasks
 
@@ -41,6 +35,8 @@ You can also browse an older version of the dataset in CSV form [here](https://w
 
 * Added photos to results page.
 
+* Remain on the form page when a search yields no results
+
 * Allow for users to search by any city using latitude and longitude instead of specific craigslist regions
 
 * Track which cities have been scraped recently to add order to the scraping process
@@ -50,6 +46,7 @@ You can also browse an older version of the dataset in CSV form [here](https://w
 * Frequent automated database updates
 
 * App deployed
+
 
 ## Contributors
 

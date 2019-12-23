@@ -130,6 +130,13 @@ def queryDropdowns():
         stateTuples.append((item, item))
     dropdowns["states"] = stateTuples
     
+    sortByList = ["Price low to high", "Price high to low", "Odometer low to high", "Odometer high to low", "Year low to high", "Year high to low"]
+    sortByTuples = []
+    sortByTuples.append(("", ""))
+    for item in sortByList:
+        sortByTuples.append((item, item))
+    dropdowns["sortBy"] = sortByTuples
+    
     return dropdowns
 
 

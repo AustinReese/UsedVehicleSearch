@@ -30,12 +30,14 @@ def queryForm(data):
     yearEnd = data.yearEnd.data
     odomStart = data.odometerStart.data
     odomEnd = data.odometerEnd.data
+    sortBy = data.sortBy.data
         
     #construct dict of strings for the query
     criteriaDict = {location: "location", manu: "manufacturer", model: "model", cond: "condition", 
                     cyl: "cylinders", tran: "transmission", vin: "vin", fuel: "fuel",
                     drive: "drive", size: "size", vType: "type", title: "title_status",
-                    color: "paint_color", priceStart: "price", priceEnd: "price", yearStart: "year", yearEnd: "year", odomStart: "odometer", odomEnd: "odometer"}
+                    color: "paint_color", priceStart: "price", priceEnd: "price", yearStart: "year", yearEnd: "year", 
+                    odomStart: "odometer", odomEnd: "odometer"}
     
     whereClause = ""
     for k, v in criteriaDict.items():
@@ -75,16 +77,24 @@ def queryForm(data):
                     whereClause = whereClause + "lat BETWEEN '{}' AND '{}' AND long BETWEEN '{}' AND '{}' AND "\
                     .format(lat - .5, lat + .5, long - .5, long + .5)
             else:
-                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
-    
+                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)        
+        
     #remove the last AND after the loop completes
     whereClause = whereClause[:-5]
+
+    print(criteriaDict)
+
+    sortBy = data.sortBy.data.replace("high to low", "DESC").replace("low to high", "ASC")
+    print(sortBy)
+    sortClause = ""
+    if sortBy != None and sortBy != "":
+        sortClause = "ORDER BY {} NULLS LAST ".format(sortBy)
         
     #finally our query
     if not whereClause:
-        query = "SELECT * FROM vehicles LIMIT 102;"
+        query = "SELECT * FROM vehicles {} LIMIT 204;".format(sortClause)
     else:
-        query = "SELECT * FROM vehicles WHERE {} LIMIT 102;".format(whereClause)
+        query = "SELECT * FROM vehicles WHERE {} {} LIMIT 204;".format(whereClause, sortClause)
             
     conn = connect()
     curs = conn.cursor()

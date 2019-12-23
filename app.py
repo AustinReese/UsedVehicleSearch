@@ -38,17 +38,21 @@ class FilterForm(FlaskForm):
     yearEnd = IntegerField("Maximum Year", validators=[validators.optional(), validators.NumberRange(min=1880, max=year + 1, message="Please enter a year between 1880 and {}".format(year + 1))])
     odometerStart = IntegerField("Minimum Odometer", validators=[validators.optional(), validators.NumberRange(min=0, max=10000000, message="Please enter a value between 0 and 10,000,000")])
     odometerEnd = IntegerField("Maximum Odometer", validators=[validators.optional(), validators.NumberRange(min=0, max=100000000, message="Please enter a value between 0 and 10,000,000")])
-    
+    sortBy = SelectField("Sort By", choices = dropdowns["sortBy"], validators = [validators.optional()])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #render index.html with form passed through as a variable
     form = FilterForm()
     #validate_on_submit() runs when the form is submitted. we then redirect to search.html with the data fetched from queryForm.py
+    success = True
     if form.is_submitted():
         data = queryForm(form)
-        return render_template("search.html", data = data)
-    return render_template("index.html", form = form)
+        if len(data) != 0:
+            return render_template("search.html", data = data)
+        else:
+            success = False
+    return render_template("index.html", form = form, success = success)
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
