@@ -67,7 +67,7 @@ def queryForm(data):
                     priceEnd = 10000000
                 whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, priceStart, priceEnd)
             elif v == "model":
-                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)
+                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k.lower())
             elif v == "location":
                 # all results near a city
                 lat, long = 0, 0
