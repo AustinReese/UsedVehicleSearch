@@ -37,6 +37,8 @@ You can also browse an older version of the dataset in CSV form [here](https://w
 
 * Remain on the form page when a search yields no results
 
+* Added back button on search page
+
 * Allow for users to search by any city using latitude and longitude instead of specific craigslist regions
 
 * Track which cities have been scraped recently to add order to the scraping process
@@ -46,6 +48,8 @@ You can also browse an older version of the dataset in CSV form [here](https://w
 * Frequent automated database updates
 
 * App deployed
+
+* Added sort by column
 
 
 ## Contributors
