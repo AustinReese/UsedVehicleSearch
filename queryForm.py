@@ -82,10 +82,7 @@ def queryForm(data):
     #remove the last AND after the loop completes
     whereClause = whereClause[:-5]
 
-    print(criteriaDict)
-
     sortBy = data.sortBy.data.replace("high to low", "DESC").replace("low to high", "ASC")
-    print(sortBy)
     sortClause = ""
     if sortBy != None and sortBy != "":
         sortClause = "ORDER BY {} NULLS LAST ".format(sortBy)
