@@ -10,3 +10,4 @@
 *.pem
 creds/
 __pycache__/
+data/

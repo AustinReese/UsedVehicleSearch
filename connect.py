@@ -1,8 +1,8 @@
 import psycopg2
-
+import os
 
 def fetchCreds():
-    f = open("creds/creds.txt")
+    f = open(os.path.dirname(os.path.abspath(__file__)) + "/creds/creds.txt")
     creds = {}
     for line in f.readlines():
         creds[line.split("|")[0]] = line.split("|")[1].strip()

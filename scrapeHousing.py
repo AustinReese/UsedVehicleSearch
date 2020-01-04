@@ -11,6 +11,9 @@ from requests_html import HTMLSession
 from connect import connect
 from crawlCities import storeCities
 
+import sys,os
+sys.path.append(os.getcwd())
+
 def runScraper():
     storeCities()
     
@@ -26,7 +29,9 @@ def runScraper():
         citiesList.append(city)
     
     curs = conn.cursor()
-
+    
+    curs.execute("drop table if exists housing")
+    
     curs.execute('''
     CREATE TABLE IF NOT EXISTS housing(
     id BIGINT PRIMARY KEY NOT NULL,
@@ -49,7 +54,9 @@ def runScraper():
     image_url TEXT, 
     description TEXT,
     lat REAL,
-    long REAL
+    long REAL,
+    county TEXT,
+    state TEXT
     )''') 
         
     session = HTMLSession()
@@ -58,7 +65,7 @@ def runScraper():
     scraped = 0
     
     #simple txt file mechanism to track scraping progress
-    fileName = "static/trackHousingScraping.txt"
+    fileName = os.path.dirname(os.path.abspath(__file__)) + "/static/trackHousingScraping.txt"
     exists = os.path.isfile(fileName)
     if not exists:
         tracker = open(fileName, "w")
@@ -239,6 +246,8 @@ def runScraper():
                 furnished = 0
                 laundry = None
                 parking = None
+                county = None
+                state = None
                 
                 #proceed with optional laundry and parking options if exist
                 
@@ -284,8 +293,30 @@ def runScraper():
                     location = tree.xpath("//div[@id='map']")
                     lat = float(location[0].attrib["data-latitude"])
                     long = float(location[0].attrib["data-longitude"])
-                except:
-                    pass
+                    locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
+                    locationJsonPage = html.fromstring(locationInfo.content)
+                    locationJson = loads(locationJsonPage.text)
+                    try:
+                        #sometimes the API will randomly return malfomed data, if this is the case we request one more time
+                        if "status" in locationJson["result"]["geographies"]["States"][0]:
+                            locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
+                            locationJsonPage = html.fromstring(locationInfo.content)
+                            locationJson = loads(locationJsonPage.text)
+                        state = locationJson["result"]["geographies"]["States"][0]["BASENAME"]
+                    except KeyError as e:
+                        print("keyerror" + str(e))                        
+                        state = None
+                    try:
+                        if "status" in locationJson["result"]["geographies"]["Counties"][0]:
+                            locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
+                            locationJsonPage = html.fromstring(locationInfo.content)
+                            locationJson = loads(locationJsonPage.text)
+                        county = locationJson["result"]["geographies"]["Counties"][0]["BASENAME"]
+                    except KeyError as e:
+                        print("keyerror" + str(e))
+                        county = None
+                except Exception as e:
+                    print("exception: " + str(e))
                 
                 #try to fetch housing description, remain as None if it does not exist
                 
@@ -296,15 +327,15 @@ def runScraper():
                     pass
 
                 #finally we get to insert the entry into the database
-                    
+                print(county, state)
                 curs.execute('''
                 INSERT INTO housing(
                 id, url, region, region_url, price, type, sqfeet, beds, baths, cats_allowed, dogs_allowed,
                 smoking_allowed, wheelchair_access, electric_vehicle_charge,
-                comes_furnished, laundry_options, parking_options, image_url, description, lat, long) 
-                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
+                comes_furnished, laundry_options, parking_options, image_url, description, lat, long, county, state) 
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
                     (idpk, url, city[1], city[0], price, housingType, sqfeet, beds, baths, cats, dogs, smoking,
-                     wheelchair, electricCharge, furnished, laundry, parking, img_url, description, lat, long))
+                     wheelchair, electricCharge, furnished, laundry, parking, img_url, description, lat, long, county, state))
 
                 scraped += 1
 

@@ -15,6 +15,8 @@ def storeCities():
     #create requests session
     s = HTMLSession()
     
+    print("scraping regions")
+    
     #webpage 'origin' contains all US craigslist regions
     origin = s.get("https://geo.craigslist.org/iso/us/")
     tree = (html.fromstring(origin.content))
@@ -35,8 +37,12 @@ def storeCities():
         curs.execute(f'''
         INSERT INTO cities VALUES('{item.attrib['href']}', '{name.replace("'", "''")}')
         ''')
-        print(f"inserted {name}")
+        
     conn.commit()
+    
+    count = curs.execute("SELECT Count(*) FROM cities")
+    print("{} regions added to database".format(curs.fetchall()[0][0]))
+    
     conn.close()
     
 def main():
