@@ -10,6 +10,7 @@ def storeCities():
 
     curs = conn.cursor()
     curs.execute("DROP TABLE IF EXISTS cities")
+    
     curs.execute("CREATE TABLE IF NOT EXISTS cities(cityURL TEXT PRIMARY KEY, cityTitle TEXT)")
     
     #create requests session

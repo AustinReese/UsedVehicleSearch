@@ -29,7 +29,7 @@ def runScraper():
         citiesList.append(city)
     
     curs = conn.cursor()
-        
+            
     curs.execute('''
     CREATE TABLE IF NOT EXISTS housing(
     id BIGINT PRIMARY KEY NOT NULL,
@@ -325,7 +325,7 @@ def runScraper():
                     pass
 
                 #finally we get to insert the entry into the database
-                print(county, state)
+
                 curs.execute('''
                 INSERT INTO housing(
                 id, url, region, region_url, price, type, sqfeet, beds, baths, cats_allowed, dogs_allowed,
