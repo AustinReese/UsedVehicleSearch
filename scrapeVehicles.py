@@ -23,12 +23,12 @@ def runScraper():
     citiesList = []
     for city in curs.fetchall():
         citiesList.append(city)
-    
+
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, region TEXT, region_url TEXT, 
     price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
     odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
     description TEXT, county TEXT, state TEXT, lat REAL, long REAL)''')
-    conn.commit()
+
     session = HTMLSession()
     
     #scraped counts all entries gathered
@@ -62,7 +62,7 @@ def runScraper():
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
-        print(f"Scraping vehicles from {city[1]}, {citiesCount - cities} cities remain")
+        print(f"Scraping vehicles from {city[2]}, {citiesCount - cities} cities remain")
         empty = False
         
         #scrapedIds is used to store each individual vehicle id from a city, therefore we can delete vehicle records from the database
@@ -78,7 +78,7 @@ def runScraper():
             
             #now we scrape
             try:
-                searchUrl = f"{city[0]}/d/cars-trucks/search/cta?s={scrapedInCity}"
+                searchUrl = f"{city[1]}/d/cars-trucks/search/cta?s={scrapedInCity}"
                 page = session.get(searchUrl)
             except Exception as e:
                 #catch any excpetion and continue the loop if we cannot access a site for whatever reason
@@ -170,8 +170,6 @@ def runScraper():
                 vehicle_type = None
                 paint_color = None
                 image_url = None
-                county = None
-                state = None
                 lat = None
                 long = None
                 description = None
@@ -263,30 +261,8 @@ def runScraper():
                     location = tree.xpath("//div[@id='map']")
                     lat = float(location[0].attrib["data-latitude"])
                     long = float(location[0].attrib["data-longitude"])
-                    locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
-                    locationJsonPage = html.fromstring(locationInfo.content)
-                    locationJson = loads(locationJsonPage.text)
-                    try:
-                        #sometimes the API will randomly return malfomed data, if this is the case we request one more time
-                        if "status" in locationJson["result"]["geographies"]["States"][0]:
-                            locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
-                            locationJsonPage = html.fromstring(locationInfo.content)
-                            locationJson = loads(locationJsonPage.text)
-                        state = locationJson["result"]["geographies"]["States"][0]["BASENAME"]
-                    except KeyError as e:
-                        print("keyerror" + str(e))                        
-                        state = None
-                    try:
-                        if "status" in locationJson["result"]["geographies"]["Counties"][0]:
-                            locationInfo = session.get("https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x={}&y={}&benchmark=4&vintage=4&format=json".format(long, lat))
-                            locationJsonPage = html.fromstring(locationInfo.content)
-                            locationJson = loads(locationJsonPage.text)
-                        county = locationJson["result"]["geographies"]["Counties"][0]["BASENAME"]
-                    except KeyError as e:
-                        print("keyerror" + str(e))
-                        county = None
                 except Exception as e:
-                    print("exception: " + str(e))
+                    pass
                                 
                 #try to fetch a vehicle description, remain as None if it does not exist
                 
@@ -300,11 +276,12 @@ def runScraper():
                 #finally we get to insert the entry into the database
                 curs.execute('''INSERT INTO vehicles(id, url, region, region_url, price, year, manufacturer, model, condition,
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
-                paint_color, image_url, description, county, state, lat, long)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
+                paint_color, image_url, description, lat, long, state)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
                     (idpk, url, city[1], city[0], price, year, manufacturer, model, condition, cylinders,
                      fuel, odometer, title_status, transmission, VIN, drive, 
-                     size, vehicle_type, paint_color, image_url, description, county, state, lat, long))
+                     size, vehicle_type, paint_color, image_url, description, lat, long, city[3]))
+                
                 scraped += 1
             #these lines will execute every time we grab a new page (after 120 entries)
             print("{} vehicles scraped".format(scraped))
