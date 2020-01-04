@@ -155,7 +155,6 @@ def runScraper():
             for item in housingList:
                 url = item[0]
                 price = item[1]
-                url = "https://minneapolis.craigslist.org/dak/apa/d/burnsville-1-bedroom-available-now/7046832350.html"
                 try:
                     idpk = int(url.split("/")[-1].strip(".html"))
                 except ValueError as e:
