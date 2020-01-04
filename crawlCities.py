@@ -35,8 +35,8 @@ def storeCities():
         curs.execute(f'''
         INSERT INTO cities VALUES('{item.attrib['href']}', '{name.replace("'", "''")}')
         ''')
-        conn.commit()
         print(f"inserted {name}")
+    conn.commit()
     conn.close()
     
 def main():
