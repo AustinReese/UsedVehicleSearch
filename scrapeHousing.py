@@ -213,19 +213,16 @@ def runScraper():
                 try:
                     beds = float(baseAttrs[0].lower().strip("br"))
                 except ValueError:
-                    print("Error converting bed number {} into float".format(baseAttrs[0].lower().strip("br")))
                     continue
 
                 try:
                     baths = float(baseAttrs[1].lower().strip("ba"))
                 except ValueError:
-                    print("Error converting bath number {} into float".format(baseAttrs[1].lower().strip("ba")))
                     continue
                 
                 try:
                     sqfeet = int(baseAttrs[2])
                 except ValueError:
-                    print("Error converting sqfoot {} into int".format(baseAttrs[2]))
                     continue
                 
                 #default optional attributes to None or the default value unless otherwise specified by the listing
