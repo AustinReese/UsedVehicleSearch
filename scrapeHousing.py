@@ -29,9 +29,7 @@ def runScraper():
         citiesList.append(city)
     
     curs = conn.cursor()
-    
-    curs.execute("drop table if exists housing")
-    
+        
     curs.execute('''
     CREATE TABLE IF NOT EXISTS housing(
     id BIGINT PRIMARY KEY NOT NULL,
