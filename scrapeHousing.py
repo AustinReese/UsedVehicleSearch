@@ -110,7 +110,7 @@ def runScraper():
     for city in citiesList:
         scrapedInCity = 0
         cities += 1
-        print(f"Scraping housing from {city[1]}, {citiesCount - cities} cities remain")
+        print(f"Scraping housing from {city[2]}, {citiesCount - cities} cities remain")
         empty = False
         
         #scrapedIds is used to store each individual vehicle id from a city, therefore we can delete vehicle records from the database
@@ -307,7 +307,7 @@ def runScraper():
                 smoking_allowed, wheelchair_access, electric_vehicle_charge,
                 comes_furnished, laundry_options, parking_options, image_url, description, lat, long, state) 
                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
-                    (idpk, url, city[1], city[0], price, housingType, sqfeet, beds, baths, cats, dogs, smoking,
+                    (idpk, url, city[2], city[1], price, housingType, sqfeet, beds, baths, cats, dogs, smoking,
                      wheelchair, electricCharge, furnished, laundry, parking, img_url, description, lat, long, city[3]))
 
                 scraped += 1

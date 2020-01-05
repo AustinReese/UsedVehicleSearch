@@ -23,28 +23,38 @@ def storeCities():
     print("scraping regions")
     
     for state in states:
-        url = "https://geo.craigslist.org/iso/us/"+state
+        url = "https://geo.craigslist.org/iso/us/" + state
         print("Fetching from "+url)
         origin = s.get(url)
-        tree = (html.fromstring(origin.content))
-        #cities = list of elements for each region
-        cities = tree.xpath('//ul[contains(concat( " " , @class, " "), " geo-site-list ")]//li//a')
-        #major cities are presented in bold text, this must be handled
-        boldAt = 0
-        for item in cities:
-            name = item.text
-            #if name == None, text is in bold
-            if name == None:
-                name = item.xpath("//b")[boldAt].text
-                boldAt += 1
-            if not re.match(r"[a-z]*, [A-Z]*", name):
-                #insert url and city name, easy stuff
-                link = item.attrib['href']
-                if link[:4] != "http":
-                    continue
-                curs.execute(f'''INSERT INTO cities VALUES('{name.replace("'", "''")+state}','{link}', '{name.replace("'", "''")}', '{state}')''')
-                
-    conn.commit()
+        tree = (html.fromstring(origin.content))        
+        
+        #some states just redirect to a single site, we don't want to leave those out
+        if origin.url.split("/")[-1] != state:
+            name = tree.xpath("//div[@class='regular-area']//h2[@class='area']")[0].text
+            curs.execute(f'''INSERT INTO cities VALUES('{name + state}','{origin.url}', '{name}', '{state}')''')            
+        else:
+            #cities = list of elements for each region
+            cities = tree.xpath('//ul[contains(concat( " " , @class, " "), " geo-site-list ")]//li//a')
+            
+            #major cities are presented in bold text, this must be handled
+            boldAt = 0
+            for item in cities:
+                name = item.text
+                #if name == None, text is in bold
+                if name == None:
+                    name = item.xpath("//b")[boldAt].text
+                    boldAt += 1
+                if not re.match(r"[a-z]*, [A-Z]*", name):
+                    #insert url and city name, easy stuff
+                    name = name.replace("'", "''")
+                    link = item.attrib['href']
+                    #there are some suburbs of cities in different states with weird cars+trucks / housing links, ignore those.
+                    if link[:4] != "http":
+                        continue
+                    
+                    curs.execute(f'''INSERT INTO cities VALUES('{name + state}','{link}', '{name}', '{state}')''')
+
+    #conn.commit()
     count = curs.execute("SELECT Count(*) FROM cities")
     print("{} regions added to database".format(curs.fetchall()[0][0]))
     conn.close()

@@ -279,7 +279,7 @@ def runScraper():
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
                 paint_color, image_url, description, lat, long, state)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
-                    (idpk, url, city[1], city[0], price, year, manufacturer, model, condition, cylinders,
+                    (idpk, url, city[2], city[1], price, year, manufacturer, model, condition, cylinders,
                      fuel, odometer, title_status, transmission, VIN, drive, 
                      size, vehicle_type, paint_color, image_url, description, lat, long, city[3]))
                 
@@ -288,7 +288,7 @@ def runScraper():
             print("{} vehicles scraped".format(scraped))
         
         #now to clean the database we grab all urls from the city that are already logged
-        curs.execute("SELECT id FROM vehicles WHERE region_url = '{}'".format(city[0]))
+        curs.execute("SELECT id FROM vehicles WHERE region_url = '{}'".format(city[1]))
         deleted = 0
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
