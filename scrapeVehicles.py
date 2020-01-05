@@ -83,6 +83,7 @@ def runScraper():
             except Exception as e:
                 #catch any excpetion and continue the loop if we cannot access a site for whatever reason
                 print(f"Failed to reach {searchUrl}, entries have been dropped: {e}")
+                scrapedInCity += 120
                 continue
             
             #each search page contains 120 entries

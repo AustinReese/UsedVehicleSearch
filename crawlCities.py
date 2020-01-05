@@ -39,7 +39,10 @@ def storeCities():
                 boldAt += 1
             if not re.match(r"[a-z]*, [A-Z]*", name):
                 #insert url and city name, easy stuff
-                curs.execute(f'''INSERT INTO cities VALUES('{name.replace("'", "''")+state}','{item.attrib['href']}', '{name.replace("'", "''")}', '{state}')''')
+                link = item.attrib['href']
+                if link[:4] != "http":
+                    continue
+                curs.execute(f'''INSERT INTO cities VALUES('{name.replace("'", "''")+state}','{link}', '{name.replace("'", "''")}', '{state}')''')
                 
     conn.commit()
     count = curs.execute("SELECT Count(*) FROM cities")
