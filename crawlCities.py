@@ -24,7 +24,7 @@ def storeCities():
     
     for state in states:
         url = "https://geo.craigslist.org/iso/us/" + state
-        print("Fetching from "+url)
+        print("Fetching from " + url)
         origin = s.get(url)
         tree = (html.fromstring(origin.content))        
         
@@ -54,7 +54,7 @@ def storeCities():
                     
                     curs.execute(f'''INSERT INTO cities VALUES('{name + state}','{link}', '{name}', '{state}')''')
 
-    #conn.commit()
+    conn.commit()
     count = curs.execute("SELECT Count(*) FROM cities")
     print("{} regions added to database".format(curs.fetchall()[0][0]))
     conn.close()
