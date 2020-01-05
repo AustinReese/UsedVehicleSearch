@@ -1,5 +1,0 @@
-user|postgres
-password|plantsarerad
-name|anicedb
-endpoint|anicedb.ckzwemliogkl.us-east-1.rds.amazonaws.com
-port|5432
