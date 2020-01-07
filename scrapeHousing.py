@@ -317,7 +317,7 @@ def runScraper():
 
         
         #now to clean the database we grab all urls from the city that are already logged
-        curs.execute("SELECT id FROM housing WHERE region_url = '{}'".format(city[0]))
+        curs.execute("SELECT id FROM housing WHERE region_url = '{}'".format(city[1]))
         deleted = 0
         
         #if a given id is not in scrapedIds (the ids that we just scraped) then the entry no longer exists and we remove it
