@@ -12,10 +12,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "CraigsistFilter"
 bootstrap = Bootstrap(app)
 
-DROPDOWNS = queryDropdowns()
-
 class FilterForm(FlaskForm):
     #set up the form and grabbing dropdowns, a dictionary of unique values to populate select fields
+    DROPDOWNS = queryDropdowns()
     
     year = datetime.now().year
     
