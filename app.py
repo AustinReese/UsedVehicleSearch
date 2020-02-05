@@ -8,6 +8,7 @@ from queryDropdowns import queryDropdowns
 from datetime import datetime
 from os import environ
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "CraigsistFilter"
 bootstrap = Bootstrap(app)
