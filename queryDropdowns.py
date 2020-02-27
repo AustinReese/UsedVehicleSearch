@@ -5,32 +5,20 @@ from connect import connect
 
 def queryDropdowns():
     dropdowns = {}
-    conn = connect()
-    curs = conn.cursor()
-    curs.execute("SELECT DISTINCT cylinders FROM vehicles")
-    cylinders = curs.fetchall()
-    curs.execute("SELECT DISTINCT fuel FROM vehicles")
-    fuel = curs.fetchall()
-    curs.execute("SELECT DISTINCT title_status FROM vehicles")
-    titleStatus = curs.fetchall()
-    curs.execute("SELECT DISTINCT drive FROM vehicles")
-    drive = curs.fetchall()
-    curs.execute("SELECT DISTINCT type FROM vehicles")
-    vehicleType = curs.fetchall()
-    curs.execute("SELECT DISTINCT paint_color FROM vehicles")
-    paintColor = curs.fetchall()
-    curs.execute("SELECT DISTINCT year FROM vehicles")
-    year = curs.fetchall()
-    curs.execute("SELECT DISTINCT manufacturer FROM vehicles")
-    manufacturer = curs.fetchall()
-    curs.execute("SELECT DISTINCT condition FROM vehicles")
-    condition = curs.fetchall()
-    curs.execute("SELECT DISTINCT size FROM vehicles")
-    size = curs.fetchall()
-    curs.execute("SELECT DISTINCT transmission FROM vehicles")
-    transmission = curs.fetchall()
-    conn.close()
+    cylinders = [('4 cylinders',), (None,), ('10 cylinders',), ('8 cylinders',), ('6 cylinders',), ('5 cylinders',), ('3 cylinders',), ('other',), ('12 cylinders',)]
+    fuel = [(None,), ('other',), ('hybrid',), ('gas',), ('diesel',), ('electric',)]
+    titleStatus = [(None,), ('salvage',), ('parts only',), ('missing',), ('lien',), ('clean',), ('rebuilt',)]
+    drive = [(None,), ('rwd',), ('fwd',), ('4wd',)]
+    vehicleType = [(None,), ('wagon',), ('sedan',), ('SUV',), ('bus',), ('truck',), ('mini-van',), ('convertible',), ('pickup',), ('hatchback',), ('other',), ('offroad',), ('coupe',), ('van',)]
+    paintColor = [('purple',), ('orange',), ('green',), ('blue',), ('brown',), ('grey',), ('yellow',), ('black',), ('white',), ('red',), (None,), ('silver',), ('custom',)]
+    year = [(2000,), (2011,), (1948,), (1965,), (1932,), (1985,), (1949,), (1941,), (1947,), (1938,), (1925,), (1906,), (1918,), (1946,), (1960,), (1951,), (1976,), (1972,), (1998,), (1915,), (1966,), (1981,), (2007,), (1916,), (1927,), (1978,), (1929,), (1944,), (1968,), (2006,), (1961,), (1952,), (2020,), (1962,), (2001,), (1926,), (1950,), (1999,), (1937,), (1923,), (1957,), (1955,), (1900,), (2012,), (1954,), (1959,), (1988,), (1964,), (2021,), (1969,), (None,), (2008,), (1989,), (1991,), (0,), (1945,), (1974,), (1943,), (1935,), (1971,), (1977,), (1940,), (1956,), (1984,), (1983,), (2017,), (1934,), (2009,), (1958,), (2005,), (1973,), (2013,), (1914,), (1933,), (2003,), (2015,), (1930,), (1990,), (1993,), (1903,), (1953,), (2002,), (1979,), (1997,), (2004,), (1980,), (1919,), (2016,), (1921,), (1936,), (1975,), (1970,), (1986,), (2018,), (1982,), (1942,), (1995,), (1992,), (1920,), (1963,), (1994,), (1928,), (2014,), (2010,), (1924,), (1939,), (2019,), (1931,), (1996,), (1987,), (1967,)]
+    manufacturer = [(None,), ('chevrolet',), ('mazda',), ('acura',), ('audi',), ('nissan',), ('mini',), ('mercedes-benz',), ('chrysler',), ('ram',), ('kia',), ('pontiac',), ('bmw',), ('hennessey',), ('infiniti',), ('volkswagen',), ('morgan',), ('ford',), ('harley-davidson',), ('jaguar',), ('fiat',), ('hyundai',), ('volvo',), ('gmc',), ('rover',), ('alfa-romeo',), ('honda',), ('mercury',), ('aston-martin',), ('buick',), ('lexus',), ('tesla',), ('toyota',), ('saturn',), ('land rover',), ('mitsubishi',), ('cadillac',), ('subaru',), ('lincoln',), ('jeep',), ('porche',), ('datsun',), ('ferrari',), ('dodge',)]
+    condition = [('excellent',), ('new',), ('good',), ('fair',), (None,), ('salvage',), ('like new',)]
+    size = [('sub-compact',), (None,), ('mid-size',), ('compact',), ('full-size',)]
+    transmission = [(None,), ('other',), ('manual',), ('automatic',)]
+    
     transmissions = []    
+    
     for item in transmission:
         item = item[0]
         if item != None:
