@@ -40,6 +40,7 @@ def queryForm(data):
                     odomStart: "odometer", odomEnd: "odometer"}
     
     whereClause = ""
+    valueTuple = ()
     for k, v in criteriaDict.items():
         #if not k then the field was left blank and we do not include it in the query, otherwise we search by it
         if k != None and k != "":
@@ -52,32 +53,37 @@ def queryForm(data):
                 if yearEnd == None:
                     yearEnd = datetime.now().year + 1
                 #query between the two values
-                whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, yearStart, yearEnd)
+                whereClause = whereClause + f"{v} BETWEEN %s AND %s AND "
+                valueTuple = valueTuple + (yearStart, yearEnd,)
             #repeat
             elif v == "odometer":
                 if odomStart == None:
                     odomStart = 0
                 if odomEnd == None:
                     odomEnd = 10000000
-                whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, odomStart, odomEnd)
+                whereClause = whereClause + f"{v} BETWEEN %s AND %s AND "
+                valueTuple = valueTuple + (odomStart, odomEnd,)
             elif v == "price":
                 if priceStart == None:
                     priceStart = 0
                 if priceEnd == None:
                     priceEnd = 10000000
-                whereClause = whereClause + "{} BETWEEN '{}' AND '{}' AND ".format(v, priceStart, priceEnd)
+                whereClause = whereClause + f"{v} BETWEEN %s AND %s AND "
+                valueTuple = valueTuple + (priceStart, priceEnd,)
             elif v == "model":
-                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k.lower())
+                whereClause = whereClause + f"{v} LIKE %s AND "
+                valueTuple = valueTuple + (k.lower(),)
             elif v == "location":
                 # all results near a city
                 lat, long = 0, 0
                 loc = geo.geocode(location)
                 if loc:
                     lat, long = loc.latitude, loc.longitude
-                    whereClause = whereClause + "lat BETWEEN '{}' AND '{}' AND long BETWEEN '{}' AND '{}' AND "\
-                    .format(lat - .5, lat + .5, long - .5, long + .5)
+                    whereClause = whereClause + "lat BETWEEN %s AND %s AND long BETWEEN %s AND %s AND "
+                    valueTuple = valueTuple + (lat - .5, lat + .5, long - .5, long + .5,)
             else:
-                whereClause = whereClause + "{} LIKE '{}' AND ".format(v, k)        
+                whereClause = whereClause + f"{v} LIKE %s AND "
+                valueTuple = valueTuple + (k,)
         
     #remove the last AND after the loop completes
     whereClause = whereClause[:-5]
@@ -85,17 +91,20 @@ def queryForm(data):
     sortBy = data.sortBy.data.replace("high to low", "DESC").replace("low to high", "ASC")
     sortClause = ""
     if sortBy != None and sortBy != "":
-        sortClause = "ORDER BY {} NULLS LAST ".format(sortBy)
+        sortClause = f"ORDER BY {sortBy} NULLS LAST "
         
     #finally our query
     if not whereClause:
-        query = "SELECT * FROM vehicles {} LIMIT 204;".format(sortClause)
+        query = f"SELECT * FROM vehicles {sortClause} LIMIT 204;"
     else:
-        query = "SELECT * FROM vehicles WHERE {} {} LIMIT 204;".format(whereClause, sortClause)
-            
+        query = f"SELECT * FROM vehicles WHERE {whereClause} {sortClause} LIMIT 204;"
+    
+    print(query)
+    print(valueTuple)
+    
     conn = connect()
     curs = conn.cursor()
-    curs.execute(query)
+    curs.execute(query, valueTuple)
     res = curs.fetchall()
     conn.close()
     
