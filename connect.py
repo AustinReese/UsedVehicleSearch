@@ -1,20 +1,10 @@
 import psycopg2
 import os
 
-def fetchCreds():
-    f = open(os.path.dirname(os.path.abspath(__file__)) + "/creds/creds.txt")
-    creds = {}
-    for line in f.readlines():
-        creds[line.split("|")[0]] = line.split("|")[1].strip()
-    return creds
-
 def connect():
-    #fetch credentials
-    creds = fetchCreds()
-    #connect to database
-    conn = psycopg2.connect(host = creds["endpoint"],
-                            user = creds["user"],
-                            password = creds["password"],
-                            database = "postgres",
-                            port = creds["port"])
+    conn = psycopg2.connect(host = os.environ.get("endpoint"),
+                            user = os.environ.get("user"),
+                            password = os.environ.get("password"),
+                            database = os.environ.get("database"),
+                            port = os.environ.get("port"))
     return conn
