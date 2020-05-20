@@ -11,3 +11,5 @@
 creds/
 __pycache__/
 data/
+.idea/
+venv/
