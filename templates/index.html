@@ -1,75 +1,82 @@
 <!DOCTYPE html> {% extends "base.html" %}
 {% block content %}
-<form action="/" method=POST>
-	<h2 class="form-login-heading text-center">Search Craigslist</h2>
-    {% if success == false %}
-  <div class="col-md-12 text-center">
-    <h2>Your search yielded no results</h2>
-  {% endif %}
-	{{ form.csrf_token }}
-	<div class="col-md-6 text-center">
-  		{{ wtf.form_field(form.location) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.model) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.vin) }} 
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.manufacturer) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.condition) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.cylinders) }} 
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.fuel) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.transmission) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.title_status) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.drive) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.size) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.vehicle_type) }}
-  	</div> 
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.paint_color) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.price_start) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.price_end) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.year_start) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.year_end) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.odometer_start) }}
-  	</div>
-  	<div class="col-md-3 text-center">
-  		{{ wtf.form_field(form.odometer_end) }}
-  	</div>
-        <div class="col-md-3 text-center">
-      {{ wtf.form_field(form.sort_by) }}
-    </div>
-  	<div class="col-md-12 text-center">
-		<input class="btn btn-primary" type=submit val=go>
-	</div>
-  </div>
-</form>
+<div class="text-center">
+	<form action="/" method=POST>
+		{% if success == false %}
+		<div class="col-md-4"></div>
+		<div class="alert alert-danger text-center col-md-4" role="alert">
+			<strong>Your search yielded no results</strong>
+		</div>
+		<div class="col-md-4"></div>
+		{% endif %}
+		<h2 class="form-login-heading text-center col-md-12">Search Vehicles</h2>
+	  <div class="col-md-12 text-center">
+		{{ form.csrf_token }}
+		<div class="col-md-6 text-center">
+			{{ wtf.form_field(form.location) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.model) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.vin) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.manufacturer) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.condition) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.cylinders) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.fuel) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.transmission) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.title_status) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.drive) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.size) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.vehicle_type) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.paint_color) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.price_start) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.price_end) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.year_start) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.year_end) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.odometer_start) }}
+		</div>
+		<div class="col-md-3 text-center">
+			{{ wtf.form_field(form.odometer_end) }}
+		</div>
+			<div class="col-md-3 text-center">
+		  {{ wtf.form_field(form.sort_by) }}
+		</div>
+		<div class="col-md-12 text-center">
+			<input class="btn btn-primary" type=submit val=go>
+		</div>
+	  </div>
+	</form>
+	<br>
+</div>
 {% endblock %}

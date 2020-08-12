@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, request, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
+from flask_paginate import Pagination
 from wtforms import StringField, IntegerField, SelectField, validators
 from wtforms.validators import Length
 from queryForm import query_form
@@ -68,21 +69,41 @@ def index():
     form = FilterForm()
     # validate_on_submit() runs when the form is submitted. we then redirect to search.html with the data fetched
     # from queryForm.py
-    success = True
     if form.is_submitted():
-        try:
-            data = query_form(form)
-        except OperationalError as e:
-            print(f"Critical database error: {e}")
-            return render_template("error.html")
-        if len(data) != 0:
-            return render_template("search.html", data=data)
-        else:
-            success = False
-    return render_template("index.html", form=form, success=success)
+        session['form'] = form.data
+        return redirect(url_for("search"))
+    return render_template("index.html", form=form, success=True)
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    form_data = session['form']
+    page = int(request.args.get('page', 1))
+    per_page = 100
+    offset = (page - 1) * per_page
+
+    try:
+        data, total_results = query_form(form_data, per_page, offset)
+    except OperationalError as e:
+        print(f"Critical database error: {e}")
+        return render_template("error.html")
+    if len(data) != 0:
+        vehicle_pagination = Pagination(page=page,
+                                        per_page=per_page,
+                                        total=total_results,
+                                        css_framework='bootstrap4')
+        return render_template("search.html",
+                               data=data,
+                               page=page,
+                               per_page=per_page,
+                               total=total_results,
+                               pagination=vehicle_pagination
+                               )
+    else:
+        form = FilterForm()
+        return render_template("index.html", form=form, success=False)
 
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)

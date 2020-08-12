@@ -6,31 +6,31 @@ from geopy.geocoders import Nominatim
 from connect import connect
 
 
-def query_form(data):
+def query_form(data, per_page, offset):
     # this will be used to get the lat/long of cities, allowing for cars nearby searches
     geo = Nominatim(user_agent="CraigslistFilter")
 
     # grab data from user
-    location = data.location.data
-    manufacturer = data.manufacturer.data
-    model = data.model.data
-    cond = data.condition.data
-    cyl = data.cylinders.data
-    fuel = data.fuel.data
-    tran = data.transmission.data
-    title = data.title_status.data
-    vin = data.vin.data
-    drive = data.drive.data
-    size = data.size.data
-    vehicle_type = data.vehicle_type.data
-    color = data.paint_color.data
-    price_start = data.price_start.data
-    price_end = data.price_end.data
-    year_start = data.year_start.data
-    year_end = data.year_end.data
-    odom_start = data.odometer_start.data
-    odom_end = data.odometer_end.data
-    sort_by = data.sort_by.data.replace("high to low", "DESC").replace("low to high", "ASC")
+    location = data['location']
+    manufacturer = data['manufacturer']
+    model = data['model']
+    cond = data['condition']
+    cyl = data['cylinders']
+    fuel = data['fuel']
+    tran = data['transmission']
+    title = data['title_status']
+    vin = data['vin']
+    drive = data['drive']
+    size = data['size']
+    vehicle_type = data['vehicle_type']
+    color = data['paint_color']
+    price_start = data['price_start']
+    price_end = data['price_end']
+    year_start = data['year_start']
+    year_end = data['year_end']
+    odom_start = data['odometer_start']
+    odom_end = data['odometer_end']
+    sort_by = data['sort_by'].replace("high to low", "DESC").replace("low to high", "ASC")
 
     # construct dict of strings for the query
     criteria_dict = {location: "location", manufacturer: "manufacturer", model: "model", cond: "condition",
@@ -95,15 +95,19 @@ def query_form(data):
 
     # finally our query
     if not where_clause:
-        query = f"SELECT * FROM vehicles {sort_clause} LIMIT 204;"
+        query = f"SELECT * FROM vehicles {sort_clause} LIMIT {per_page} OFFSET {offset};"
+        len_query = f"SELECT count(*) FROM vehicles;"
     else:
-        query = f"SELECT * FROM vehicles WHERE {where_clause} {sort_clause} LIMIT 204;"
+        query = f"SELECT * FROM vehicles WHERE {where_clause} {sort_clause} LIMIT {per_page} OFFSET {offset};"
+        len_query = f"SELECT count(*) FROM vehicles WHERE {where_clause};"
 
     conn = connect()
     curs = conn.cursor()
     curs.execute(query, value_tuple)
-    res = curs.fetchall()
+    vehicle_res = curs.fetchall()
+    curs.execute(len_query, value_tuple)
+    len_res = curs.fetchall()[0][0]
     conn.close()
 
     # return our results
-    return res
+    return vehicle_res, len_res

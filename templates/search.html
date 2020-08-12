@@ -3,22 +3,25 @@
 <div class="text-center">
 	<a class="btn btn-large btn-info" href="/">Search again</a>
 	{% if data|length == 0 %}
-	<div class="col-md-12 text-center">
+	<div class="col-md-12">
 		<h2>No results found</h2>
 	{% else %}
-		<h3>Results</h3>
+		{{ pagination.links }}
+		<h4>Showing results {{(page - 1) * per_page + 1}}-{{page * per_page}} out of {{total}} total matches</h4>
 		<ul class="list-group">
 		{% for entry in range(data|length) %}
 			<div class="col-md-4 panel text-center">
 				{% if data[entry][6] != None %}
 				<li class="list-group-item text-center size_hack">
-					<a target=_blank, href={{data[entry][1]}}>{{data[entry][5]}} {{data[entry][6]}} {{data[entry][7]}} - ${{data[entry][4]}} - Located in {{data[entry][2]}}
+					<a target=_blank, href={{data[entry][1]}}>
+						<div class="col-md-12">{{data[entry][5]}} {{data[entry][6]}} {{data[entry][7]}} - ${{data[entry][4]}} - Located in {{data[entry][2]}}</div>
 						<img src={{data[entry][19]}} alt="Photo not available" style="max-width: 100%">
 					</a>
 				</li>
 				{% else %}
 				<li class="list-group-item text-center size_hack">
-					<a target=_blank, href={{data[entry][1]}}>{{data[entry][5]}} {{data[entry][7]}} - ${{data[entry][4]}} - Located in {{data[entry][2]}}
+					<a target=_blank, href={{data[entry][1]}}>
+						<div class="col-md-12">{{data[entry][5]}} {{data[entry][7]}} - ${{data[entry][4]}} - Located in {{data[entry][2]}}</div>
 						<img src={{data[entry][19]}} alt="Photo not available" style="max-width: 100%">
 					</a>
 				</li>
@@ -26,6 +29,9 @@
 			</div>
 		{% endfor %}
 		</ul>
+		<div class="col-md-12">
+			{{ pagination.links }}
+		</div>
 	</div>
 	{% endif %}
 </div>
