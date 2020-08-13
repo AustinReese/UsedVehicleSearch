@@ -11,18 +11,18 @@
 		<ul class="list-group">
 		{% for entry in range(data|length) %}
 			<div class="col-md-4 panel text-center">
-				{% if data[entry][6] != None %}
+				{% if data[entry][4] != None %}
 				<li class="list-group-item text-center size_hack">
-					<a target=_blank, href={{data[entry][1]}}>
-						<div class="col-md-12">{{data[entry][5]}} {{data[entry][6]}} {{data[entry][7]}} - ${{data[entry][4]}} - Located in {{data[entry][2]}}</div>
-						<img src={{data[entry][19]}} alt="Photo not available" style="max-width: 100%">
+					<a target=_blank, href={{data[entry][0]}}>
+						<div class="col-md-12">{{data[entry][3]}} {{data[entry][4]}} {{data[entry][5]}} - ${{data[entry][2]}} - Located in {{data[entry][1]}}</div>
+						<img src={{data[entry][6]}} alt="Photo not available" style="max-width: 100%">
 					</a>
 				</li>
 				{% else %}
 				<li class="list-group-item text-center size_hack">
-					<a target=_blank, href={{data[entry][1]}}>
-						<div class="col-md-12">{{data[entry][5]}} {{data[entry][7]}} - ${{data[entry][4]}} - Located in {{data[entry][2]}}</div>
-						<img src={{data[entry][19]}} alt="Photo not available" style="max-width: 100%">
+					<a target=_blank, href={{data[entry][0]}}>
+						<div class="col-md-12">{{data[entry][3]}} {{data[entry][5]}} - ${{data[entry][2]}} - Located in {{data[entry][1]}}</div>
+						<img src={{data[entry][6]}} alt="Photo not available" style="max-width: 100%">
 					</a>
 				</li>
 				{% endif %}

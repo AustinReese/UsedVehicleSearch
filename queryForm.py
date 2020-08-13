@@ -95,10 +95,10 @@ def query_form(data, per_page, offset):
 
     # finally our query
     if not where_clause:
-        query = f"SELECT * FROM vehicles {sort_clause} LIMIT {per_page} OFFSET {offset};"
+        query = f"SELECT url, region, price, year, manufacturer, model, image_url FROM vehicles {sort_clause} LIMIT {per_page} OFFSET {offset};"
         len_query = f"SELECT count(*) FROM vehicles;"
     else:
-        query = f"SELECT * FROM vehicles WHERE {where_clause} {sort_clause} LIMIT {per_page} OFFSET {offset};"
+        query = f"SELECT url, region, price, year, manufacturer, model, image_url FROM vehicles WHERE {where_clause} {sort_clause} LIMIT {per_page} OFFSET {offset};"
         len_query = f"SELECT count(*) FROM vehicles WHERE {where_clause};"
 
     conn = connect()
