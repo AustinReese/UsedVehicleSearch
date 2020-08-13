@@ -6,7 +6,7 @@ from geopy.geocoders import Nominatim
 from connect import connect
 
 
-def query_form(data, per_page, offset):
+def query_filter_form(data, per_page, offset):
     # this will be used to get the lat/long of cities, allowing for cars nearby searches
     geo = Nominatim(user_agent="CraigslistFilter")
 
@@ -99,6 +99,104 @@ def query_form(data, per_page, offset):
         len_query = f"SELECT count(*) FROM vehicles;"
     else:
         query = f"SELECT url, region, price, year, manufacturer, model, image_url FROM vehicles WHERE {where_clause} {sort_clause} LIMIT {per_page} OFFSET {offset};"
+        len_query = f"SELECT count(*) FROM vehicles WHERE {where_clause};"
+
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute(query, value_tuple)
+    vehicle_res = curs.fetchall()
+    curs.execute(len_query, value_tuple)
+    len_res = curs.fetchall()[0][0]
+    conn.close()
+
+    # return our results
+    return vehicle_res, len_res
+
+def query_table_form(data):
+    # this will be used to get the lat/long of cities, allowing for cars nearby searches
+    geo = Nominatim(user_agent="CraigslistFilter")
+
+    # grab data from user
+    location = data['location']
+    manufacturer = data['manufacturer']
+    model = data['model']
+    cond = data['condition']
+    cyl = data['cylinders']
+    fuel = data['fuel']
+    tran = data['transmission']
+    title = data['title_status']
+    vin = data['vin']
+    drive = data['drive']
+    size = data['size']
+    vehicle_type = data['vehicle_type']
+    color = data['paint_color']
+    price_start = data['price_start']
+    price_end = data['price_end']
+    year_start = data['year_start']
+    year_end = data['year_end']
+
+    # construct dict of strings for the query
+    criteria_dict = {location: "location", manufacturer: "manufacturer", model: "model", cond: "condition",
+                     cyl: "cylinders", tran: "transmission", vin: "vin", fuel: "fuel",
+                     drive: "drive", size: "size", vehicle_type: "type", title: "title_status",
+                     color: "paint_color", price_start: "price", price_end: "price", year_start: "year",
+                     year_end: "year"}
+
+    where_clause = ""
+    value_tuple = ()
+    for k, v in criteria_dict.items():
+        # if not k then the field was left blank and we do not include it in the query, otherwise we search by it
+        if k is not None and k != "":
+            # these if statements allow for searching by minimum/maximum values
+            if v == "year":
+                # for example we must handle blank min/max's so if they are blank they are set to the default min/max
+                if year_start is None:
+                    year_start = 1880
+                # again with maximum
+                if year_end is None:
+                    year_end = datetime.now().year + 1
+                # query between the two values
+                where_clause = where_clause + f"{v} BETWEEN %s AND %s AND "
+                value_tuple = value_tuple + (year_start, year_end,)
+            # repeat
+            elif v == "odometer":
+                if odom_start is None:
+                    odom_start = 0
+                if odom_end is None:
+                    odom_end = 10000000
+                where_clause = where_clause + f"{v} BETWEEN %s AND %s AND "
+                value_tuple = value_tuple + (odom_start, odom_end,)
+            elif v == "price":
+                if price_start is None:
+                    price_start = 0
+                if price_end is None:
+                    price_end = 10000000
+                where_clause = where_clause + f"{v} BETWEEN %s AND %s AND "
+                value_tuple = value_tuple + (price_start, price_end,)
+            elif v == "model":
+                where_clause = where_clause + f"{v} LIKE %s AND "
+                value_tuple = value_tuple + (k.lower(),)
+            elif v == "location":
+                # all results near a city
+                lat, long = 0, 0
+                loc = geo.geocode(location)
+                if loc:
+                    lat, long = loc.latitude, loc.longitude
+                    where_clause = where_clause + "lat BETWEEN %s AND %s AND long BETWEEN %s AND %s AND "
+                    value_tuple = value_tuple + (lat - .5, lat + .5, long - .5, long + .5,)
+            else:
+                where_clause = where_clause + f"{v} LIKE %s AND "
+                value_tuple = value_tuple + (k,)
+
+    # remove the last AND after the loop completes
+    where_clause = where_clause[:-5]
+
+    # finally our query
+    if not where_clause:
+        query = f"SELECT price, odometer FROM vehicles LIMIT 50000;"
+        len_query = f"SELECT count(*) FROM vehicles;"
+    else:
+        query = f"SELECT price, odometer FROM vehicles WHERE {where_clause} LIMIT 50000;"
         len_query = f"SELECT count(*) FROM vehicles WHERE {where_clause};"
 
     conn = connect()
