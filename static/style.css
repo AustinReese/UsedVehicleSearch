@@ -4,3 +4,15 @@
     overflow: hidden;
     margin: 10px;
 }
+
+.margin-top-two {
+    margin-top: 2%;
+}
+
+.margin-bottom-two {
+    margin-bottom: 2%;
+}
+
+p {
+    font-size: 16px;
+}

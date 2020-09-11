@@ -15,6 +15,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "CraigsistFilter"
 bootstrap = Bootstrap(app)
 
+OFFLINE_DEBUG = False
 
 class FilterForm(FlaskForm):
     # set up the form and grabbing drop downs, a dictionary of unique values to populate select fields
@@ -99,6 +100,18 @@ class TableForm(FlaskForm):
                                                         validators.NumberRange(min=1880, max=year + 1,
                                                                                message="Please enter a year between "
                                                                                        f"1880 and {year + 1}")])
+    odometer_start = IntegerField("Minimum Odometer", validators=[validators.optional(),
+                                                                  validators.NumberRange(min=0, max=10000000,
+                                                                                         message="Please enter a value "
+                                                                                                 "between 0 and 10,"
+                                                                                                 "000,000")])
+    odometer_end = IntegerField("Maximum Odometer", validators=[validators.optional(),
+                                                                validators.NumberRange(min=0, max=100000000,
+                                                                                       message="Please enter a value "
+                                                                                               "between 0 and 10,000,"
+                                                                                               "000")])
+    group_by = SelectField("Group By", choices=drop_downs["numerical_fields_backwards"], validators=[validators.data_required()])
+    display_field = SelectField("Display Field", choices=drop_downs["numerical_fields"], validators=[validators.data_required()])
 
 @app.route('/')
 def index():
@@ -120,7 +133,7 @@ def search():
     offset = (page - 1) * per_page
 
     try:
-        data, total_results = query_filter_form(form_data, per_page, offset)
+        data, total_results = query_filter_form(form_data, per_page, offset, offline_debug=OFFLINE_DEBUG)
     except OperationalError as e:
         print(f"Critical database error: {e}")
         return render_template("error.html")
@@ -145,38 +158,84 @@ def tables():
     table_form = TableForm()
     if table_form.validate_on_submit():
         try:
-            data, total_results = query_table_form(table_form.data)
+            if table_form.data["group_by"] == table_form.data["display_field"]:
+                return render_template("tables.html",
+                                       form=table_form,
+                                       success="invalid_selection_failure",
+                                       table=None,
+                                       group_by=None,
+                                       display=None)
+
+            data, total_results, min_group_by = query_table_form(table_form.data, offline_debug=OFFLINE_DEBUG)
+            group_by =  table_form.data["group_by"]
+            display_field = table_form.data["display_field"]
         except OperationalError as e:
             print(f"Critical database error: {e}")
             return render_template("error.html")
         if len(data) != 0:
-            pd_data = pd.DataFrame(data, columns=['price', 'odometer'])
-            price_quantiles = [0]
-            quantile_data = {}
+            pd_data = pd.DataFrame(data, columns=[display_field, group_by])
+            group_by_quantiles = [0 if min_group_by == None else min_group_by]
+            quantile_data = {"Percentiles": ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"]}
             for i in range(10):
-                price_quantiles.append(pd_data['price'].quantile((i + 1) / 10))
+                group_by_quantiles.append(pd_data[group_by].quantile((i + 1) / 10))
 
             for i in range(10):
-                price_quantiles_df = pd_data[pd_data['price'].between(price_quantiles[i], price_quantiles[i + 1])]
-                odometer_quantiles = [0]
-                odometer_means = []
+                group_by_quantiles_df = pd_data[pd_data[group_by].between(group_by_quantiles[i], group_by_quantiles[i + 1])]
+                display_quantiles = [0]
+                display_means = []
                 for j in range(10):
-                    odometer_quantiles.append(price_quantiles_df['odometer'].quantile((j + 1) / 10))
+                    display_quantiles.append(group_by_quantiles_df[display_field].quantile((j + 1) / 10))
                 for j in range(10):
-                    odometer_quantiles_df = price_quantiles_df[price_quantiles_df['odometer'].between(odometer_quantiles[j], odometer_quantiles[j + 1])]
-                    odometer_mean = odometer_quantiles_df['odometer'].mean()
+                    display_quantiles_df = group_by_quantiles_df[group_by_quantiles_df[display_field].between(display_quantiles[j], display_quantiles[j + 1])]
+                    display_mean = display_quantiles_df[display_field].mean()
                     try:
-                        odometer_means.append(int(odometer_mean))
+                        if display_field == "price":
+                            display_means.append(f"${int(display_mean):,}")
+                        elif display_field == "year":
+                            display_means.append(f"{int(display_mean)}")
+                        else:
+                            display_means.append(f"{int(display_mean):,}")
                     except:
-                        odometer_means.append("No Info")
-                quantile_data[f"{round(price_quantiles[i])}-{round(price_quantiles[i + 1])}"] = odometer_means
-            percentile_html = pd.DataFrame(quantile_data).to_html()
-            return percentile_html
-            return render_template("tables.html", form=table_form, success=True, table=[1, 2, 3])
-        else:
-            return render_template("tables.html", form=table_form, success=False, table=None)
-    return render_template("tables.html", form=table_form, success=True, table=None)
+                        display_means.append("No Info")
+                if group_by == "price":
+                    quantile_data[f"${int(group_by_quantiles[i]):,}-${int(group_by_quantiles[i + 1]):,}"] = display_means
+                elif group_by == "year":
+                    quantile_data[f"{int(group_by_quantiles[i])}-{int(group_by_quantiles[i + 1])}"] = display_means
+                else:
+                    quantile_data[f"{int(group_by_quantiles[i]):,}-{int(group_by_quantiles[i + 1]):,}"] = display_means
 
+            percentile_html_list = pd.DataFrame(quantile_data).to_html(border=0, index=False).split("</thead>")
+            percentile_html = percentile_html_list[0]\
+                                .replace('''class="dataframe"''', '''class="table table-striped"''')\
+                                .replace("<th>", '''<th scope="col">''')\
+                                + "</thead>"\
+                                + percentile_html_list[1]\
+                                .replace("<th>", '''<th scope="row">''')
+
+            return render_template("tables.html",
+                                   form=table_form,
+                                   success="success",
+                                   table=percentile_html,
+                                   group_by=group_by,
+                                   display=display_field)
+        else:
+            return render_template("tables.html",
+                                   form=table_form,
+                                   success="no_data_failure",
+                                   table=None,
+                                   group_by=None,
+                                   display=None)
+
+    return render_template("tables.html",
+                                   form=table_form,
+                                   success="success",
+                                   table=None,
+                                   group_by=None,
+                                   display=None)
+
+@app.route('/tables_help')
+def tables_help():
+    return render_template("tables_help.html")
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.

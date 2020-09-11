@@ -1,3 +1,4 @@
+*.save
 *.xml
 *.db
 *.db-journal

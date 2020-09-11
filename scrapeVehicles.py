@@ -127,7 +127,7 @@ def runScraper():
                     continue
                 
                 vehicleDict = {}
-                vehicleDict["price"] = int(item[1].strip("$"))
+                vehicleDict["price"] = int(item[1].replace(",", "").strip("$"))
                 
                 try:
                     #grab each individual vehicle page
