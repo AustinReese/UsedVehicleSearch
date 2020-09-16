@@ -1,0 +1,181 @@
+<!DOCTYPE html> {% extends "base.html" %}
+{% block content %}
+
+<div class="text-justify margin-top-two">
+    <h3 class="text-center">About quantile tables</h3>
+    <p>
+    Quantile tables are a somewhat complicated tool to read. The intent is to allow users to gauge what is considered
+        to be a 'good price' or 'bad price' for a vehicle by filtering vehicle options and displaying the average
+        price (or year/odometer) in the Nth percentile of the result. These average prices are grouped by another
+        numerical variable for further insight into the current going rate of used vehicles. Take the following table
+        as an example. The display field is price, grouped by year with no filters applied.
+    </p>
+    <div class="col-md-12 text-center margin-bottom-two" id="percentile_table">
+		<h4>Average Price Displayed, Grouped By Year</h4>
+	</div>
+		<table border="0" class="table table-striped">
+          <thead>
+            <tr style="text-align: right;">
+              <th scope="col">Percentiles</th>
+              <th scope="col">1880-2001</th>
+              <th scope="col">2001-2005</th>
+              <th scope="col">2005-2008</th>
+              <th scope="col">2008-2010</th>
+              <th scope="col">2010-2012</th>
+              <th scope="col">2012-2014</th>
+              <th scope="col">2014-2015</th>
+              <th scope="col">2015-2017</th>
+              <th scope="col">2017-2018</th>
+              <th scope="col">2018-2021</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1-10</td>
+              <td>$1,056</td>
+              <td>$1,196</td>
+              <td>$1,856</td>
+                <td class="text-success"><b>$2,607</b></td>
+              <td>$3,418</td>
+              <td>$3,532</td>
+              <td>$4,366</td>
+              <td>$4,367</td>
+              <td>$3,927</td>
+              <td>$4,364</td>
+            </tr>
+            <tr>
+              <td>11-20</td>
+              <td>$1,857</td>
+              <td>$2,221</td>
+              <td>$3,314</td>
+                <td class="text-success"><b>$4,397</b></td>
+              <td>$5,891</td>
+              <td>$7,346</td>
+              <td>$8,913</td>
+              <td>$11,159</td>
+              <td>$13,883</td>
+              <td>$15,837</td>
+            </tr>
+            <tr>
+              <td>21-30</td>
+              <td>$2,742</td>
+              <td>$2,847</td>
+              <td>$4,166</td>
+                <td class="text-success"><b>$5,383</b></td>
+              <td>$7,076</td>
+              <td>$8,668</td>
+              <td>$10,888</td>
+              <td>$13,892</td>
+              <td>$16,536</td>
+              <td>$19,056</td>
+            </tr>
+            <tr>
+              <td>31-40</td>
+              <td>$3,506</td>
+              <td>$3,629</td>
+              <td>$4,995</td>
+                <td class="text-warning"><b>$6,355</b></td>
+              <td>$8,204</td>
+              <td>$10,101</td>
+              <td>$12,771</td>
+              <td>$15,986</td>
+              <td>$18,748</td>
+              <td>$21,633</td>
+            </tr>
+            <tr>
+              <td>41-50</td>
+              <td>$4,597</td>
+              <td>$4,185</td>
+              <td>$5,932</td>
+                <td class="text-warning"><b>$7,285</b></td>
+              <td>$9,419</td>
+              <td>$11,657</td>
+              <td>$14,545</td>
+              <td>$18,079</td>
+              <td>$21,205</td>
+              <td>$24,739</td>
+            </tr>
+            <tr>
+              <td>51-60</td>
+              <td>$5,991</td>
+              <td>$5,006</td>
+              <td>$6,952</td>
+                <td class="text-warning"><b>$8,320</b></td>
+              <td>$10,757</td>
+              <td>$13,340</td>
+              <td>$16,570</td>
+              <td>$20,871</td>
+              <td>$24,519</td>
+              <td>$28,689</td>
+            </tr>
+            <tr>
+              <td>61-70</td>
+              <td>$8,198</td>
+              <td>$6,321</td>
+              <td>$8,262</td>
+                <td class="text-warning"><b>$9,608</b></td>
+              <td>$12,701</td>
+              <td>$15,326</td>
+              <td>$19,110</td>
+              <td>$24,835</td>
+              <td>$29,051</td>
+              <td>$33,395</td>
+            </tr>
+            <tr>
+              <td>71-80</td>
+              <td>$11,603</td>
+              <td>$7,987</td>
+              <td>$10,092</td>
+                <td class="text-danger"><b>$11,760</b></td>
+              <td>$14,973</td>
+              <td>$18,035</td>
+              <td>$23,245</td>
+              <td>$29,618</td>
+              <td>$33,990</td>
+              <td>$38,461</td>
+            </tr>
+            <tr>
+              <td>81-90</td>
+              <td>$17,160</td>
+              <td>$11,750</td>
+              <td>$14,010</td>
+                <td class="text-danger"><b>$15,277</b></td>
+              <td>$18,671</td>
+              <td>$22,357</td>
+              <td>$29,064</td>
+              <td>$35,379</td>
+              <td>$39,159</td>
+              <td>$45,187</td>
+            </tr>
+            <tr>
+              <td>91-100</td>
+              <td>$37,889</td>
+              <td>$25,415</td>
+              <td>$28,261</td>
+                <td class="text-danger"><b>$29,065</b></td>
+              <td>$31,382</td>
+              <td>$36,966</td>
+              <td>$43,296</td>
+              <td>$50,778</td>
+              <td>$56,705</td>
+              <td>$64,961</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+    <p>
+    Say you wanted to purchase a vehicle from 2009. This falls in the 2008-2010 year group, and we see that the best price
+        (1-10th percentile, unlike many applications of percentiles a low 'score' is actually a good thing) is somewhere
+        around $2,607, with $4,397 and $5,383 falling in the 11-20th and 21-30th percentiles respectively. Poor prices
+        are above $11,760, 71-80th percentile, with the most expensive of all used cars from 2008-2010 costing an average
+        of $29,065. These price differences are high as this table was not filtered on any vehicle criteria, but using
+        the vehicle filter in along with the quantile tool allows one to build highly specific tables which are good
+        indicators as to the current market value of the vehicle. Due to the size of the database and computational cost
+        of building the tables, the number of listings used to build tables is capped at 10k. That being said, specific
+        searches are likely to return less than 10k listings.
+    </p>
+</div>
+<div class="text-center">
+	<a class="btn btn-link margin-bottom-two" href="/tables">Return to table builder</a>
+</div>
+{% endblock %}

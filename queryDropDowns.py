@@ -122,4 +122,7 @@ def query_drop_downs():
         sort_by_tuples.append((item, item))
     drop_downs["sort_by"] = sort_by_tuples
 
+    drop_downs["numerical_fields"] = [(item, item) for item in ["price", "odometer", "year"]]
+    drop_downs["numerical_fields_backwards"] = [(item, item) for item in ["year", "odometer", "price"]]
+
     return drop_downs

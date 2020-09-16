@@ -1,13 +1,16 @@
 <!DOCTYPE html> {% extends "base.html" %}
 {% block content %}
 <div class="text-center">
-	<a class="btn btn-large btn-info" href="/">Search again</a>
 	{% if data|length == 0 %}
 	<div class="col-md-12">
 		<h2>No results found</h2>
 	{% else %}
 		{{ pagination.links }}
-		<h4>Showing results {{(page - 1) * per_page + 1}}-{{page * per_page}} out of {{total}} total matches</h4>
+		{% if page * per_page < total %}
+			<h4>Showing results {{(page - 1) * per_page + 1}}-{{page * per_page}} out of {{total}} total matches</h4>
+		{% else %}
+					<h4>Showing results {{(page - 1) * per_page + 1}}-{{total}} out of {{total}} total matches</h4>
+		{% endif %}
 		<ul class="list-group">
 		{% for entry in range(data|length) %}
 			<div class="col-md-4 panel text-center">
@@ -32,7 +35,16 @@
 		<div class="col-md-12">
 			{{ pagination.links }}
 		</div>
+		<div class="col-md-12 margin-bottom-two">
+			<button class="btn btn-primary " id="toTop">Scroll to top</button>
+			<a class="btn btn-large btn-primary" href="/filter">Search again</a>
+		</div>
 	</div>
 	{% endif %}
 </div>
+<script>
+$("#toTop").click(function () {
+   $("html, body").animate({scrollTop: 0}, 1000);
+});
+</script>
 {% endblock %}
