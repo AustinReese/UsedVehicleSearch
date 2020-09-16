@@ -164,7 +164,8 @@ def tables():
                                        success="invalid_selection_failure",
                                        table=None,
                                        group_by=None,
-                                       display=None)
+                                       display=None,
+                                       total_results=None)
 
             data, total_results, min_group_by = query_table_form(table_form.data, offline_debug=OFFLINE_DEBUG)
             group_by =  table_form.data["group_by"]
@@ -217,21 +218,24 @@ def tables():
                                    success="success",
                                    table=percentile_html,
                                    group_by=group_by,
-                                   display=display_field)
+                                   display=display_field,
+                                   total_results=f"{int(total_results):,}")
         else:
             return render_template("tables.html",
                                    form=table_form,
                                    success="no_data_failure",
                                    table=None,
                                    group_by=None,
-                                   display=None)
+                                   display=None,
+                                   total_results=None)
 
     return render_template("tables.html",
                                    form=table_form,
                                    success="success",
                                    table=None,
                                    group_by=None,
-                                   display=None)
+                                   display=None,
+                                   total_results=None)
 
 @app.route('/tables_help')
 def tables_help():

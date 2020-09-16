@@ -96,7 +96,7 @@
 	</form>
 	{% if table is not none %}
 	<div class="col-md-12 text-center margin-bottom-two" id="percentile_table">
-		<h3>Average {{ display.title() }} Displayed, Grouped By {{ group_by.title() }}</h3>
+		<h3>Average {{ display.title() }} Displayed, Grouped By {{ group_by.title() }}, {{ total_results }} listings used</h3>
 	</div>
 	<div class="col-md-12 margin-bottom-two">
 		{% autoescape off %}{{ table }}{% endautoescape %}

@@ -186,7 +186,7 @@ def query_table_form(data, offline_debug=False):
         query = f"SELECT {display_field}, {group_by} FROM vehicles LIMIT 20000;"
         len_query = f"SELECT count(*) FROM vehicles;"
     else:
-        query = f"SELECT {display_field}, {group_by} FROM vehicles WHERE {where_clause} LIMIT 50000;"
+        query = f"SELECT {display_field}, {group_by} FROM vehicles WHERE {where_clause} LIMIT 20000;"
         len_query = f"SELECT count(*) FROM vehicles WHERE {where_clause};"
 
     conn = connect(offline_debug)
@@ -196,6 +196,9 @@ def query_table_form(data, offline_debug=False):
     curs.execute(len_query, value_tuple)
     len_res = curs.fetchall()[0][0]
     conn.close()
+
+    if len_res > 20000:
+        len_res = 20000
 
     if group_by == "price":
         min_group_by = price_start
