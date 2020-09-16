@@ -41,7 +41,7 @@ def runScraper():
                  "mitsubishi", "lincoln", "volvo", "mercury", "harley-davidson", "harley", 
                  "rover", "buick", "cadillac", "infiniti", "infinity", "audi", "mazda", "chrysler",
                  "acura", "lexus", "nissan", "datsun", "jaguar", "alfa", "alfa-romeo", "aston", "aston-martin",
-                 "ferrari", "fiat", "hennessey", "porche", "noble", "morgan", "mini", "tesla"]
+                 "ferrari", "fiat", "hennessey", "porsche", "noble", "morgan", "mini", "tesla"]
     
     #if the car year is beyond next year, we toss it out. this variable is used later
     nextYear = datetime.now().year + 1
