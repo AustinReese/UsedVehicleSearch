@@ -10,19 +10,19 @@
 		</div>
 		<div class="col-md-4"></div>
 		{% endif %}
-		<h2 class="form-login-heading text-center col-md-12">Search Vehicles</h2>
+		<h2 class="form-login-heading text-center col-md-12">Search Vehicles (all fields are optional)</h2>
 	  	<div class="col-md-12 text-center">
 			<div class="col-md-6 text-center">
 				{{ wtf.form_field(form.location) }}
+			</div>
+			<div class="col-md-3 text-center">
+				{{ wtf.form_field(form.manufacturer) }}
 			</div>
 			<div class="col-md-3 text-center">
 				{{ wtf.form_field(form.model) }}
 			</div>
 			<div class="col-md-3 text-center">
 				{{ wtf.form_field(form.vin) }}
-			</div>
-			<div class="col-md-3 text-center">
-				{{ wtf.form_field(form.manufacturer) }}
 			</div>
 			<div class="col-md-3 text-center">
 				{{ wtf.form_field(form.condition) }}

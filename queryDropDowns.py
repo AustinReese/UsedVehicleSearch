@@ -18,7 +18,7 @@ def query_drop_downs():
                     ('infiniti',), ('volkswagen',), ('morgan',), ('ford',), ('harley-davidson',), ('jaguar',),
                     ('fiat',), ('hyundai',), ('volvo',), ('gmc',), ('rover',), ('alfa-romeo',), ('honda',),
                     ('mercury',), ('aston-martin',), ('buick',), ('lexus',), ('tesla',), ('toyota',), ('saturn',),
-                    ('land rover',), ('mitsubishi',), ('cadillac',), ('subaru',), ('lincoln',), ('jeep',), ('porche',),
+                    ('land rover',), ('mitsubishi',), ('cadillac',), ('subaru',), ('lincoln',), ('jeep',), ('porsche',),
                     ('datsun',), ('ferrari',), ('dodge',)]
     condition = [('excellent',), ('new',), ('good',), ('fair',), (None,), ('salvage',), ('like new',)]
     size = [('sub-compact',), (None,), ('mid-size',), ('compact',), ('full-size',)]
@@ -29,7 +29,7 @@ def query_drop_downs():
     for item in transmission:
         item = item[0]
         if item is not None:
-            transmissions.append((item, item))
+            transmissions.append((item, item.title()))
     transmissions.append(("", ""))
     transmissions.sort()
     drop_downs["transmission"] = transmissions
@@ -37,7 +37,7 @@ def query_drop_downs():
     for item in size:
         item = item[0]
         if item is not None:
-            sizes.append((item, item))
+            sizes.append((item, item.title()))
     sizes.append(("", ""))
     sizes.sort()
     drop_downs["size"] = sizes
@@ -45,7 +45,7 @@ def query_drop_downs():
     for item in cylinders:
         item = item[0]
         if item is not None:
-            cyls.append((item, item))
+            cyls.append((item, item.title()))
     cyls.append(("", ""))
     cyls.sort()
     drop_downs["cylinders"] = cyls
@@ -53,7 +53,7 @@ def query_drop_downs():
     for item in fuel:
         item = item[0]
         if item is not None:
-            fuels.append((item, item))
+            fuels.append((item, item.title()))
     fuels.append(("", ""))
     fuels.sort()
     drop_downs["fuel"] = fuels
@@ -61,7 +61,7 @@ def query_drop_downs():
     for item in title_status:
         item = item[0]
         if item is not None:
-            title_status_list.append((item, item))
+            title_status_list.append((item, item.title()))
     title_status_list.append(("", ""))
     title_status_list.sort()
     drop_downs["title_status"] = title_status_list
@@ -69,7 +69,7 @@ def query_drop_downs():
     for item in drive:
         item = item[0]
         if item is not None:
-            drives.append((item, item))
+            drives.append((item, item.title()))
     drives.append(("", ""))
     drives.sort()
     drop_downs["drive"] = drives
@@ -77,7 +77,7 @@ def query_drop_downs():
     for item in vehicle_type:
         item = item[0]
         if item is not None:
-            vehicle_types.append((item, item))
+            vehicle_types.append((item, item.title()))
     vehicle_types.append(("", ""))
     vehicle_types.sort()
     drop_downs["vehicle_type"] = vehicle_types
@@ -85,7 +85,7 @@ def query_drop_downs():
     for item in paint_color:
         item = item[0]
         if item is not None:
-            paint_colors.append((item, item))
+            paint_colors.append((item, item.title()))
     paint_colors.append(("", ""))
     paint_colors.sort()
     drop_downs["paint_color"] = paint_colors
@@ -93,7 +93,7 @@ def query_drop_downs():
     for item in manufacturer:
         item = item[0]
         if item is not None:
-            manufacturers.append((item, item))
+            manufacturers.append((item, item.title()))
     manufacturers.append(("", ""))
     manufacturers.sort()
     drop_downs["manufacturer"] = manufacturers
@@ -101,7 +101,7 @@ def query_drop_downs():
     for item in condition:
         item = item[0]
         if item is not None:
-            conditions.append((item, item))
+            conditions.append((item, item.title()))
     conditions.append(("", ""))
     conditions.sort()
     drop_downs["condition"] = conditions
