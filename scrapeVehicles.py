@@ -174,6 +174,7 @@ def runScraper():
                 lat = None
                 long = None
                 description = None
+                posted_on = None
                 
                 #now this code gets redundant. if we picked up a specific attr in the vehicleDict then we can change the variable from None.
                 #integer attributes (price/odometer) are handled in case the int() is unsuccessful, but i have never seen that be the case
@@ -272,7 +273,12 @@ def runScraper():
                     description = location[0].text_content().replace("\n", " ").replace("QR Code Link to This Post", "").strip()
                 except:
                     pass
-                    
+
+                try:
+                    posted_on = tree.xpath("//div[@class='postinginfos']//p[@class='postinginfo reveal']//time")
+                    print(posted_on)
+                except Exception as e:
+                    print(e)
                 
                 #finally we get to insert the entry into the database
                 curs.execute('''INSERT INTO vehicles(id, url, region, region_url, price, year, manufacturer, model, condition,
