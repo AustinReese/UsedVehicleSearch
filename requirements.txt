@@ -7,7 +7,7 @@ Flask-WTF==0.14.3
 geographiclib==1.50
 geopy==2.0.0
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 pandas==1.0.3
 psycopg2-binary==2.8.5
