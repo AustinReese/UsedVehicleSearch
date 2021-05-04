@@ -27,7 +27,7 @@ def runScraper():
     curs.execute('''CREATE TABLE IF NOT EXISTS vehicles(id BIGINT PRIMARY KEY, url TEXT, region TEXT, region_url TEXT, 
     price BIGINT, year BIGINT, manufacturer TEXT, model TEXT, condition TEXT, cylinders TEXT, fuel TEXT, 
     odometer BIGINT, title_status TEXT, transmission TEXT, VIN TEXT, drive TEXT, size TEXT, type TEXT, paint_color TEXT, image_url TEXT, 
-    description TEXT, county TEXT, state TEXT, lat REAL, long REAL)''')
+    description TEXT, state TEXT, lat REAL, long REAL, posting_date TEXT)''')
 
     session = HTMLSession()
     
@@ -174,7 +174,7 @@ def runScraper():
                 lat = None
                 long = None
                 description = None
-                posted_on = None
+                posting_date = None
                 
                 #now this code gets redundant. if we picked up a specific attr in the vehicleDict then we can change the variable from None.
                 #integer attributes (price/odometer) are handled in case the int() is unsuccessful, but i have never seen that be the case
@@ -275,19 +275,18 @@ def runScraper():
                     pass
 
                 try:
-                    posted_on = tree.xpath("//div[@class='postinginfos']//p[@class='postinginfo reveal']//time")
-                    print(posted_on)
+                    posting_date = tree.xpath("//div[@class='postinginfos']//p[@class='postinginfo reveal']//time")[0].get("datetime")
                 except Exception as e:
                     print(e)
                 
                 #finally we get to insert the entry into the database
                 curs.execute('''INSERT INTO vehicles(id, url, region, region_url, price, year, manufacturer, model, condition,
                 cylinders, fuel,odometer, title_status, transmission, VIN, drive, size, type, 
-                paint_color, image_url, description, lat, long, state)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''', 
+                paint_color, image_url, description, lat, long, state, posting_date)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
                     (idpk, url, city[2], city[1], price, year, manufacturer, model, condition, cylinders,
                      fuel, odometer, title_status, transmission, VIN, drive, 
-                     size, vehicle_type, paint_color, image_url, description, lat, long, city[3]))
+                     size, vehicle_type, paint_color, image_url, description, lat, long, city[3], posting_date))
                 
                 scraped += 1
             #these lines will execute every time we grab a new page (after 120 entries)
